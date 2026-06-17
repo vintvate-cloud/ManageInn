@@ -66,7 +66,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           <div className={styles.logoText}>
             <div className={styles.logoIcon}>H</div>
             <div>
-              <div className={styles.logoName}>HospitalityHub</div>
+              <div className={styles.logoName}>ManageInn</div>
               <div className={styles.logoPlan}>{profile?.plan?.toUpperCase() ?? 'FREE'} PLAN</div>
             </div>
           </div>

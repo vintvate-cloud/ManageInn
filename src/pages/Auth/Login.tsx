@@ -64,7 +64,7 @@ export default function LoginPage() {
         <div className={styles.authHeader}>
           <Link to="/" className={styles.authLogo}>
             <span className={styles.authLogoIcon}>H</span>
-            HospitalityHub
+            ManageInn
           </Link>
           <h1 className={styles.authTitle}>Welcome back</h1>
           <p className={styles.authSub}>Sign in to your dashboard</p>

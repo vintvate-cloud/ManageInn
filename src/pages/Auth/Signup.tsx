@@ -54,7 +54,7 @@ export default function SignupPage() {
       return
     }
 
-    toast.success('Account created! Welcome to HospitalityHub.')
+    toast.success('Account created! Welcome to ManageInn.')
     navigate('/dashboard')
   }
 
@@ -75,7 +75,7 @@ export default function SignupPage() {
         <div className={styles.authHeader}>
           <Link to="/" className={styles.authLogo}>
             <span className={styles.authLogoIcon}>H</span>
-            HospitalityHub
+            ManageInn
           </Link>
           <h1 className={styles.authTitle}>Create your account</h1>
           <p className={styles.authSub}>Get started in minutes — no credit card required</p>

@@ -47,7 +47,7 @@ export default function Landing() {
       <nav className={`${s.nav} ${navVisible ? s.navVisible : ''}`}>
         <Link to="/" className={s.logo}>
           <div className={s.logoMark}>H</div>
-          <span className={s.logoName}>HospitalityHub</span>
+          <span className={s.logoName}>ManageInn</span>
         </Link>
         <div className={s.navCta}>
           <Link to="/businesses" className={s.navLink}>Our Partners</Link>
@@ -133,7 +133,7 @@ export default function Landing() {
         <div className={s.marqueeTrack}>
           {[...Array(6)].map((_, i) => (
             <div key={i} className={s.marqueeItem}>
-              HospitalityHub <span>✦</span> Premium <span>✦</span> Secure <span>✦</span>
+              ManageInn <span>✦</span> Premium <span>✦</span> Secure <span>✦</span>
             </div>
           ))}
         </div>
@@ -188,7 +188,7 @@ export default function Landing() {
       {/* ── FOOTER ─────────────────────────────────────────── */}
       <footer className={s.footer}>
         <div data-r>
-          <h2 className={s.footerTitle}>HospitalityHub</h2>
+          <h2 className={s.footerTitle}>ManageInn</h2>
           <div className={s.footerNav}>
             <Link to="/login" className={s.navLink}>Member Portal</Link>
             <Link to="/pricing" className={s.navLink}>Membership Tiers</Link>
@@ -198,7 +198,7 @@ export default function Landing() {
         </div>
 
         <div className={s.footerBot}>
-          <span>© 2026 HospitalityHub Elite.</span>
+          <span>© 2026 ManageInn Elite.</span>
           <div style={{ display: 'flex', gap: '2vw' }}>
             <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</a>
             <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Terms of Service</a>

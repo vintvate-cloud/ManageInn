@@ -73,7 +73,7 @@ export default function BusinessDirectory() {
       <nav className={`${s.nav} ${s.navVisible}`}>
         <Link to="/" className={s.logo}>
           <div className={s.logoMark}>H</div>
-          <span className={s.logoName}>HospitalityHub</span>
+          <span className={s.logoName}>ManageInn</span>
         </Link>
         <div className={s.navCta}>
           <Link to="/" className={s.navLink}><ArrowLeft size={16} /> Back to Home</Link>
@@ -89,7 +89,7 @@ export default function BusinessDirectory() {
             <span>Businesses</span>
           </h1>
           <p className={s.heroSub} style={{ maxWidth: '600px' }}>
-            Discover the premium hotels and fine-dining establishments powered by HospitalityHub.
+            Discover the premium hotels and fine-dining establishments powered by ManageInn.
           </p>
         </div>
       </section>
