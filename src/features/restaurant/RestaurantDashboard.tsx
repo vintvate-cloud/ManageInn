@@ -1,163 +1,213 @@
-import React from 'react'
-import { useRestaurantStore } from '../../store'
-import { useAuth } from '../../features/auth/AuthContext'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { UtensilsCrossed, Table2, ShoppingBag, DollarSign, ArrowUpRight, Clock } from 'lucide-react'
-import { format } from 'date-fns'
-import styles from './Restaurant.module.css'
-
-
+import React from 'react';
+import {
+  UtensilsCrossed, Table2, Activity, BookOpen, Boxes, Banknote, Users, BarChart3,
+  Clock, ChefHat, Smartphone, QrCode, ShoppingBag, ListOrdered, Layers, AlertTriangle,
+  ClipboardList, Truck, Trash2, Receipt, SplitSquareHorizontal, CreditCard, BadgePercent,
+  Heart, MessageCircle, UserPlus, TrendingUp, Percent, DollarSign
+} from 'lucide-react';
+import { PageHeader } from '../../components/ui/dashboard-shell';
 
 export default function RestaurantDashboard() {
-  const { profile } = useAuth()
-  const { tables, orders, menu } = useRestaurantStore()
-
-  const availTables = tables.filter(t => t.status === 'available').length
-  const occupiedTables = tables.filter(t => t.status === 'occupied').length
-  const activeOrders = orders.filter(o => o.status !== 'billed').length
-  
-  const todayStr = format(new Date(), 'yyyy-MM-dd')
-  const todayOrders = orders.filter(o => o.created_at.startsWith(todayStr))
-  const todayRevenue = todayOrders.reduce((s, o) => s + o.total_amount, 0)
-  const pendingOrders = orders.filter(o => o.status === 'pending' || o.status === 'preparing').length
-
-  const PIE_COLORS = ['#5A9690', '#2F5755', '#4caf82', '#d4a017', '#a06060']
-
-  // Dynamic Chart Generation
-  const HOURLY = [{ hour: format(new Date(), 'ha'), orders: todayOrders.length, revenue: todayRevenue }]
-  
-  // Aggregate Top Items from today's orders
-  const itemMap: Record<string, { count: number, revenue: number }> = {}
-  todayOrders.forEach(o => {
-    o.items?.forEach(i => {
-      const name = i.menu_item?.name || 'Unknown Item'
-      if (!itemMap[name]) itemMap[name] = { count: 0, revenue: 0 }
-      itemMap[name].count += i.quantity
-      itemMap[name].revenue += (i.price * i.quantity)
-    })
-  })
-  
-  const TOP_ITEMS = Object.entries(itemMap)
-    .map(([name, data]) => ({ name, ...data }))
-    .sort((a, b) => b.revenue - a.revenue)
-    .slice(0, 5)
-
-  const occupancyRate = tables.length > 0 ? Math.round((occupiedTables / tables.length) * 100) : 0
-
-  const STATS = [
-    { label: 'Table Occupancy', value: `${occupancyRate}%`, sub: `${occupiedTables}/${tables.length} occupied`, icon: Table2, color: 'var(--color-teal-light)', trend: 'Live' },
-    { label: "Today's Revenue", value: `₹${todayRevenue.toLocaleString()}`, sub: 'From all tables', icon: DollarSign, color: '#4caf82', trend: todayRevenue > 0 ? 'Active' : 'Awaiting' },
-    { label: 'Active Orders', value: String(activeOrders), sub: `${pendingOrders} pending kitchen`, icon: ShoppingBag, color: 'var(--color-cream)', trend: `${orders.length} total` },
-    { label: 'Avg Order Value', value: `₹${Math.round(todayRevenue / Math.max(todayOrders.length, 1)).toLocaleString()}`, sub: 'Per table', icon: UtensilsCrossed, color: '#d4a017', trend: 'Live stats' },
-  ]
-
   return (
-    <div className={styles.dashPage}>
-      <div style={{ marginBottom: '4px' }}>
-        <h1 className={styles.dashTitle}>Restaurant Dashboard 🍽️</h1>
-        <p className={styles.dashSub}>{format(new Date(), 'EEEE, do MMMM yyyy')} · Live restaurant overview</p>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Restaurant Operations View"
+        title="Restaurant Dashboard 🍽️"
+        action={
+          <div className="flex gap-2">
+            <button className="bg-op-orange text-foreground rounded-full px-5 py-2.5 text-sm font-semibold">
+              New POS Order
+            </button>
+          </div>
+        }
+      />
+
+      {/* ORDER & TABLE MANAGEMENT */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <UtensilsCrossed className="h-5 w-5 text-op-orange" />
+            <h3 className="text-sm font-semibold uppercase tracking-wider">Order Management</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-op-orange/10 border border-op-orange/20 rounded-2xl p-4">
+              <div className="text-xs text-op-orange font-medium">Dine-In Orders</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Takeaway Orders</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Online Orders</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">QR Menu Ordering</div>
+              <div className="text-2xl font-display mt-1 text-emerald-500">0</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <Table2 className="h-5 w-5 text-emerald-500" />
+            <h3 className="text-sm font-semibold uppercase tracking-wider">Table Management</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Table Availability</div>
+              <div className="text-2xl font-display mt-1">0/0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Upcoming Reservations</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex flex-col justify-center">
+              <div className="text-xs text-muted-foreground">Waiting List</div>
+              <div className="text-xl font-display mt-1 text-rose-500">0 Waiting</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex flex-col justify-center">
+              <div className="text-xs text-muted-foreground">Table Assignment</div>
+              <div className="text-sm font-semibold mt-1 text-op-purple">Active</div>
+            </div>
+          </div>
+        </section>
       </div>
 
-      {/* Stats */}
-      <div className={styles.statsGrid}>
-        {STATS.map((s, i) => (
-          <div key={i} className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--color-bg-elevated)', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>
-                <s.icon size={20} />
+      {/* KITCHEN & MENU MANAGEMENT */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <section>
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Kitchen Management</h3>
+          <div className="space-y-3">
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">KDS Active Orders</div>
+              <div className="text-xl font-bold">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Order Queue Depth</div>
+              <div className="text-xl font-bold">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Food Prep Tracking</div>
+              <div className="text-xs px-2 py-1 bg-emerald-500/10 text-emerald-500 rounded-md">Optimal time</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Menu Management</h3>
+          <div className="space-y-3">
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Active Menu Categories</div>
+              <div className="text-xl font-bold">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Out of Stock Items</div>
+              <div className="text-xl font-bold text-rose-500">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Combo Performance</div>
+              <div className="text-xs px-2 py-1 bg-op-purple/10 text-op-purple rounded-md">Monitoring</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* INVENTORY & BILLING */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <Boxes className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-sm font-semibold uppercase tracking-wider">Inventory Tracking</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Raw Material Tracking</div>
+              <div className="text-2xl font-display mt-1">Active</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-rose-500 font-medium">Stock Alerts</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Purchase Orders</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Waste Tracking</div>
+              <div className="text-2xl font-display mt-1">0%</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <Banknote className="h-5 w-5 text-emerald-500" />
+            <h3 className="text-sm font-semibold uppercase tracking-wider">Billing & POS</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm text-emerald-500 font-medium">POS Billing Total</div>
+              <div className="text-2xl font-display text-emerald-500">₹0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">GST Collected</div>
+              <div className="text-2xl font-display mt-1">₹0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="text-xs text-muted-foreground">Split Payments</div>
+              <div className="text-2xl font-display mt-1">0</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* CUSTOMERS & REPORTS */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <section>
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Customer Management</h3>
+          <div className="space-y-3">
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Total Customer Database</div>
+              <div className="text-xl font-bold">0</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Loyalty Points Issued</div>
+              <div className="text-xl font-bold">0 pts</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-4 flex justify-between items-center">
+              <div className="text-sm font-medium">Repeat Customers Today</div>
+              <div className="text-xl font-bold text-op-orange">0</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Reports & Analytics</h3>
+          <div className="bg-card border border-border rounded-3xl p-6">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center pb-4 border-b border-border/50">
+                <span className="text-sm text-muted-foreground">Daily Sales Volume</span>
+                <span className="font-semibold text-emerald-500">₹0</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#4caf82', fontWeight: 600 }}>
-                <ArrowUpRight size={14} /> {s.trend}
+              <div className="flex justify-between items-center pb-4 border-b border-border/50">
+                <span className="text-sm text-muted-foreground">Profit Margin Estimate</span>
+                <span className="font-semibold">0%</span>
+              </div>
+              <div className="flex justify-between items-center pb-4 border-b border-border/50">
+                <span className="text-sm text-muted-foreground">Peak Hours Analysis</span>
+                <span className="font-semibold">N/A</span>
+              </div>
+              <div className="flex justify-between items-center pt-2">
+                <span className="text-sm text-muted-foreground">Food Cost Report</span>
+                <span className="font-semibold text-op-purple">Pending</span>
               </div>
             </div>
-            <div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--color-cream)', letterSpacing: '-0.02em', marginBottom: '4px' }}>{s.value}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{s.label}</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '3px', opacity: 0.7 }}>{s.sub}</div>
           </div>
-        ))}
+        </section>
       </div>
 
-      <div className={styles.chartsRow}>
-        {/* Hourly peak */}
-        <div className="card" style={{ flex: 2 }}>
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Peak Hours Today</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Clock size={12} /> Today's flow
-            </div>
-          </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={HOURLY}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(90,150,144,0.08)" />
-              <XAxis dataKey="hour" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--border-default)', borderRadius: '10px', color: 'var(--text-primary)' }} />
-              <Bar dataKey="orders" fill="#2F5755" radius={[4, 4, 0, 0]} name="Orders" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Top items */}
-        <div className="card" style={{ flex: 1 }}>
-          <div style={{ marginBottom: '20px', fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Top Menu Items</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {TOP_ITEMS.length === 0 ? (
-              <div style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center', padding: '20px 0' }}>No orders yet today.</div>
-            ) : (
-              TOP_ITEMS.map((item, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: PIE_COLORS[i] || '#5A9690', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '11px', color: 'white' }}>{i + 1}</div>
-                    <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{item.name}</span>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-teal-light)' }}>₹{item.revenue.toLocaleString()}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{item.count} sold</div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Active Orders */}
-      <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
-          <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Active Orders</div>
-          <a href="/restaurant/orders" style={{ fontSize: '13px', color: 'var(--color-teal-light)', fontWeight: 500 }}>View all →</a>
-        </div>
-
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Table</th>
-              <th>Items</th>
-              <th>Amount</th>
-              <th>GST</th>
-              <th>Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map(o => {
-              const mins = Math.floor((Date.now() - new Date(o.created_at).getTime()) / 60000)
-              return (
-                <tr key={o.id}>
-                  <td style={{ fontWeight: 700 }}>Table {o.table?.number ?? '—'}</td>
-                  <td>
-                    {o.items?.map(item => `${item.menu_item?.name ?? '?'} ×${item.quantity}`).join(', ')}
-                  </td>
-                  <td style={{ fontWeight: 700 }}>₹{o.total_amount.toLocaleString()}</td>
-                  <td style={{ color: 'var(--text-muted)' }}>₹{o.gst_amount.toFixed(0)}</td>
-                  <td style={{ color: mins > 30 ? '#d4a017' : 'var(--text-muted)', fontSize: '12px' }}>{mins} min ago</td>
-                  <td><span className={`badge badge-${o.status}`}>{o.status}</span></td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
     </div>
-  )
+  );
 }

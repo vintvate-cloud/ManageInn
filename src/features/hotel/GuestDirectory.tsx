@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useHotelStore } from '../../store'
 import { Search, Phone, Mail, MapPin, Star } from 'lucide-react'
-import styles from './Hotel.module.css'
 
 export default function GuestDirectory() {
   const { guests, bookings } = useHotelStore()
@@ -38,15 +37,15 @@ export default function GuestDirectory() {
         </div>
       </div>
 
-      <div className={styles.guestGrid}>
+      <div className="mb-4">
         {filtered.map(g => (
-          <div key={g.id} className={styles.guestCard}>
-            <div className={styles.guestAvatar}>{g.name.charAt(0).toUpperCase()}</div>
+          <div key={g.id} className="mb-4">
+            <div className="mb-4">{g.name.charAt(0).toUpperCase()}</div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
               <div>
-                <div className={styles.guestName}>{g.name}</div>
-                <div className={styles.guestPhone}>{g.phone}</div>
+                <div className="mb-4">{g.name}</div>
+                <div className="mb-4">{g.phone}</div>
               </div>
               {g.visit_count > 2 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#d4a017', fontWeight: 600, background: 'rgba(212,160,23,0.12)', padding: '3px 8px', borderRadius: '100px', border: '1px solid rgba(212,160,23,0.2)' }}>
@@ -61,18 +60,18 @@ export default function GuestDirectory() {
               {g.id_type && <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{g.id_type}: {g.id_number}</div>}
             </div>
 
-            <div className={styles.guestMeta}>
-              <div className={styles.guestMetaItem}>
-                <div className={styles.guestMetaLabel}>Visits</div>
-                <div className={styles.guestMetaValue}>{g.visit_count}</div>
+            <div className="mb-4">
+              <div className="mb-4">
+                <div className="mb-4">Visits</div>
+                <div className="mb-4">{g.visit_count}</div>
               </div>
-              <div className={styles.guestMetaItem}>
-                <div className={styles.guestMetaLabel}>Total Spent</div>
-                <div className={styles.guestMetaValue}>₹{totalSpent(g.id).toLocaleString()}</div>
+              <div className="mb-4">
+                <div className="mb-4">Total Spent</div>
+                <div className="mb-4">₹{totalSpent(g.id).toLocaleString()}</div>
               </div>
-              <div className={styles.guestMetaItem}>
-                <div className={styles.guestMetaLabel}>Last Stay</div>
-                <div className={styles.guestMetaValue}>{lastStay(g.id)}</div>
+              <div className="mb-4">
+                <div className="mb-4">Last Stay</div>
+                <div className="mb-4">{lastStay(g.id)}</div>
               </div>
             </div>
           </div>

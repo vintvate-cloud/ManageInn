@@ -1,108 +1,32 @@
-import React, { useState } from 'react'
-import { Bell, Search, Menu, X, ChevronDown } from 'lucide-react'
+import React from 'react'
+import { Bell, Search, Menu } from 'lucide-react'
 import { useAuth } from '../../features/auth/AuthContext'
-import { useLocation } from 'react-router-dom'
-import styles from './Topbar.module.css'
-
-const ROUTE_TITLES: Record<string, string> = {
-  '/hotel': 'Hotel Dashboard',
-  '/hotel/rooms': 'Room Management',
-  '/hotel/bookings': 'Bookings',
-  '/hotel/guests': 'Guest Directory',
-  '/hotel/finance': 'Finance & Revenue',
-  '/restaurant': 'Restaurant Dashboard',
-  '/restaurant/tables': 'Table Management',
-  '/restaurant/orders': 'Order Management',
-  '/restaurant/kitchen': 'Kitchen View',
-  '/restaurant/menu': 'Menu Manager',
-  '/restaurant/billing': 'Billing',
-  '/analytics': 'Analytics',
-  '/settings': 'Settings',
-  '/hybrid': 'Hybrid Dashboard',
-}
 
 interface TopbarProps {
-  sidebarCollapsed: boolean
   onMobileMenuToggle: () => void
 }
 
-export function Topbar({ sidebarCollapsed, onMobileMenuToggle }: TopbarProps) {
+export function Topbar({ onMobileMenuToggle }: TopbarProps) {
   const { profile } = useAuth()
-  const location = useLocation()
-  const [searchFocus, setSearchFocus] = useState(false)
-  const [notifOpen, setNotifOpen] = useState(false)
-
-  const pageTitle = ROUTE_TITLES[location.pathname] ?? 'Dashboard'
-
-  const MOCK_NOTIFS = [
-    { id: 1, text: 'Room 204 — check-in due in 30 min', time: '2m ago', unread: true },
-    { id: 2, text: 'Table 7 order marked ready', time: '8m ago', unread: true },
-    { id: 3, text: 'Payment received: ₹8,400 (Room 301)', time: '1h ago', unread: false },
-    { id: 4, text: 'Booking confirmed: Priya Sharma', time: '2h ago', unread: false },
-  ]
 
   return (
-    <header className={styles.topbar}>
-      <div className={styles.topbarLeft}>
-        <button className={styles.mobileMenuBtn} onClick={onMobileMenuToggle}>
-          <Menu size={20} />
-        </button>
-        <h2 className={styles.pageTitle}>{pageTitle}</h2>
+    <header className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border flex items-center gap-2 px-3 sm:px-6 py-3">
+      <button onClick={onMobileMenuToggle} aria-label="Open menu" className="lg:hidden p-2 rounded-full hover:bg-muted">
+        <Menu className="h-5 w-5" />
+      </button>
+      <div className="flex-1 min-w-0 max-w-xl relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <input
+          placeholder="Search rooms, guests, orders…"
+          className="w-full bg-muted rounded-full pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-foreground/10 transition"
+        />
       </div>
-
-      <div className={styles.topbarRight}>
-        {/* Search */}
-        <div className={`${styles.search} ${searchFocus ? styles.searchFocused : ''}`}>
-          <Search size={14} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Search rooms, guests, orders..."
-            className={styles.searchInput}
-            onFocus={() => setSearchFocus(true)}
-            onBlur={() => setSearchFocus(false)}
-          />
-        </div>
-
-        {/* Notifications */}
-        <div className={styles.notifWrapper}>
-          <button
-            className={styles.iconBtn}
-            onClick={() => setNotifOpen(!notifOpen)}
-          >
-            <Bell size={18} />
-            <span className={styles.notifDot} />
-          </button>
-
-          {notifOpen && (
-            <div className={styles.notifDropdown}>
-              <div className={styles.notifHeader}>
-                <span className={styles.notifTitle}>Notifications</span>
-                <button className={styles.notifMarkAll}>Mark all read</button>
-              </div>
-              {MOCK_NOTIFS.map(n => (
-                <div key={n.id} className={`${styles.notifItem} ${n.unread ? styles.notifItemUnread : ''}`}>
-                  {n.unread && <span className={styles.notifItemDot} />}
-                  <div>
-                    <div className={styles.notifItemText}>{n.text}</div>
-                    <div className={styles.notifItemTime}>{n.time}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Profile */}
-        <div className={styles.profileBtn}>
-          <div className={styles.profileAvatar}>
-            {profile?.name?.charAt(0)?.toUpperCase() ?? 'U'}
-          </div>
-          <div className={styles.profileInfo}>
-            <span className={styles.profileName}>{profile?.name?.split(' ')[0] ?? 'User'}</span>
-            <span className={styles.profileRole}>{profile?.role?.replace('_', ' ') ?? ''}</span>
-          </div>
-          <ChevronDown size={14} style={{ color: 'var(--text-muted)' }} />
-        </div>
+      <button className="p-2.5 rounded-full hover:bg-muted relative shrink-0">
+        <Bell className="h-4 w-4" />
+        <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-op-orange" />
+      </button>
+      <div className="h-9 w-9 rounded-full bg-foreground text-background flex items-center justify-center text-sm font-semibold shrink-0 uppercase tracking-wider">
+        {profile?.name?.substring(0, 2) ?? 'MI'}
       </div>
     </header>
   )

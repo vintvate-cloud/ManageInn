@@ -3,7 +3,6 @@ import { useRestaurantStore } from '../../store'
 import { toast } from 'react-hot-toast'
 import { ChefHat } from 'lucide-react'
 import type { OrderStatus } from '../../types'
-import styles from './Restaurant.module.css'
 
 export default function KitchenView() {
   const { orders, updateOrder } = useRestaurantStore()
@@ -26,9 +25,9 @@ export default function KitchenView() {
   }
 
   const cardStyleMap: Record<string, string> = {
-    pending: styles.kitchenCardPending,
-    preparing: styles.kitchenCardPreparing,
-    ready: styles.kitchenCardReady,
+    pending: "bg-muted/50 p-2 rounded-lg",
+    preparing: "bg-muted/50 p-2 rounded-lg",
+    ready: "bg-muted/50 p-2 rounded-lg",
   }
 
   return (
@@ -51,24 +50,24 @@ export default function KitchenView() {
           <div style={{ fontSize: '14px' }}>New orders will appear here automatically.</div>
         </div>
       ) : (
-        <div className={styles.kitchenGrid}>
+        <div className="mb-4">
           {kitchenOrders.map(order => {
             const mins = Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000)
             return (
-              <div key={order.id} className={`${styles.kitchenCard} ${cardStyleMap[order.status]}`}>
-                <div className={styles.kitchenCardHeader}>
+              <div key={order.id} className="p-2">
+                <div className="mb-4">
                   <div>
-                    <div className={styles.kitchenTableName}>Table {order.table?.number ?? '?'}</div>
-                    <div className={styles.kitchenTime}>{mins} min ago · {order.table?.location}</div>
+                    <div className="mb-4">Table {order.table?.number ?? '?'}</div>
+                    <div className="mb-4">{mins} min ago · {order.table?.location}</div>
                   </div>
                   <span className={`badge badge-${order.status}`}>{order.status}</span>
                 </div>
 
-                <div className={styles.kitchenItemsList}>
+                <div className="mb-4">
                   {order.items?.map((item, i) => (
-                    <div key={i} className={styles.kitchenItem}>
+                    <div key={i} className="mb-4">
                       <span>{item.menu_item?.name ?? '?'}</span>
-                      <span className={styles.kitchenItemQty}>× {item.quantity}</span>
+                      <span className="mb-4">× {item.quantity}</span>
                     </div>
                   ))}
                 </div>

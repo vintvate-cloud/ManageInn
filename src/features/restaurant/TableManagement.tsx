@@ -3,7 +3,6 @@ import { useRestaurantStore } from '../../store'
 import { Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import type { TableStatus } from '../../types'
-import styles from './Restaurant.module.css'
 
 const STATUS_CYCLE: TableStatus[] = ['available', 'occupied', 'reserved']
 
@@ -29,9 +28,9 @@ export default function TableManagement() {
   }
 
   const tableStyleMap: Record<TableStatus, string> = {
-    available: styles.tableCardAvailable,
-    occupied: styles.tableCardOccupied,
-    reserved: styles.tableCardReserved,
+    available: "p-4 bg-muted/50 rounded-xl",
+    occupied: "p-4 bg-muted/50 rounded-xl",
+    reserved: "p-4 bg-muted/50 rounded-xl",
   }
 
   return (
@@ -54,14 +53,14 @@ export default function TableManagement() {
         ))}
       </div>
 
-      <div className={styles.tableFloor}>
+      <div className="mb-4">
         {filtered.map(t => (
-          <div key={t.id} className={`${styles.tableCard} ${tableStyleMap[t.status]}`}>
+          <div key={t.id} className="p-2">
             <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>{t.location}</div>
-            <div className={styles.tableNumber}>{t.number}</div>
-            <div className={styles.tableCapacity}>👤 {t.capacity} seats</div>
+            <div className="mb-4">{t.number}</div>
+            <div className="mb-4">👤 {t.capacity} seats</div>
             <span className={`badge badge-${t.status}`}>{t.status}</span>
-            <div className={styles.tableActions}>
+            <div className="mb-4">
               <button onClick={() => cycleStatus(t.id, t.status)} className="btn btn-ghost btn-sm" style={{ fontSize: '11px', width: '100%', justifyContent: 'center' }}>
                 Change Status
               </button>

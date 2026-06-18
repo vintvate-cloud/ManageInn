@@ -5,18 +5,17 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar
 } from 'recharts'
-import { BedDouble, TrendingUp, Users, DollarSign, CalendarCheck, AlertCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react'
+import { BedDouble, Users, DollarSign, AlertCircle, TrendingUp, CalendarCheck } from 'lucide-react'
 import { format, differenceInDays } from 'date-fns'
-import styles from './Hotel.module.css'
-
-
+import { PageHeader, Card, StatCard, SimpleTable, AIInsight } from '../../components/ui/DashboardPrimitives'
+import { Link } from 'react-router-dom'
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div style={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--border-default)', borderRadius: '10px', padding: '12px 16px' }}>
-        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
-        <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-teal-light)' }}>
+      <div className="bg-background border border-border rounded-xl p-3 shadow-lg">
+        <div className="text-xs text-muted-foreground mb-1">{label}</div>
+        <div className="text-base font-bold text-op-purple">
           {payload[0].name === 'revenue' ? `₹${payload[0].value.toLocaleString()}` : `${payload[0].value}%`}
         </div>
       </div>
@@ -45,160 +44,124 @@ export default function HotelDashboard() {
   const todayCheckouts = bookings.filter(b => b.status === 'checked-in' && b.check_out === todayStr)
   const upcomingBookings = bookings.filter(b => b.status === 'confirmed')
 
-  // Dynamic Chart Data mapping (simplified for live view)
   const REVENUE_DATA = [{ day: 'Today', revenue: todayRevenue }]
   const OCCUPANCY_DATA = [{ month: format(new Date(), 'MMM'), rate: occupancyRate }]
 
   const STATS = [
-    { label: 'Occupancy Rate', value: `${occupancyRate}%`, sub: `${bookedRooms} of ${totalRooms} rooms`, icon: BedDouble, trend: 'Live', up: true, color: 'var(--color-teal-light)' },
-    { label: "Today's Revenue", value: `₹${todayRevenue.toLocaleString()}`, sub: 'Updated just now', icon: DollarSign, trend: todayRevenue > 0 ? 'Active' : 'Awaiting', up: todayRevenue > 0, color: '#4caf82' },
-    { label: 'Active Guests', value: String(activeBookings.length), sub: `${todayCheckouts.length} checking out today`, icon: Users, trend: `${upcomingBookings.length} upcoming`, up: true, color: 'var(--color-cream)' },
-    { label: 'Pending Payments', value: `₹${pendingAmount.toLocaleString()}`, sub: `${pendingPayments.length} bookings`, icon: AlertCircle, trend: 'Needs attention', up: false, color: '#d4a017' },
+    { label: 'Occupancy Rate', value: `${occupancyRate}%`, sub: `${bookedRooms} of ${totalRooms} rooms`, icon: BedDouble, accent: "bg-op-purple text-foreground border-transparent" },
+    { label: "Today's Revenue", value: `₹${todayRevenue.toLocaleString()}`, sub: 'Updated just now', icon: DollarSign },
+    { label: 'Active Guests', value: String(activeBookings.length), sub: `${todayCheckouts.length} checking out today`, icon: Users },
+    { label: 'Pending Payments', value: `₹${pendingAmount.toLocaleString()}`, sub: `${pendingPayments.length} bookings`, icon: AlertCircle, accent: "border-op-orange/30 bg-op-orange/5" },
   ]
 
-  return (
-    <div className={styles.dashPage}>
-      <div className={styles.dashHeader}>
-        <div>
-          <h1 className={styles.dashTitle}>Good morning, {profile?.name?.split(' ')[0]} 👋</h1>
-          <p className={styles.dashSub}>{format(new Date(), 'EEEE, do MMMM yyyy')} · Here's your hotel overview</p>
-        </div>
-      </div>
+  const recentBookingsRows = bookings.slice(0, 5).map(b => [
+    <div key={`guest-${b.id}`}>
+      <div className="font-semibold">{b.guest?.name ?? '—'}</div>
+      <div className="text-xs text-muted-foreground">{b.type}</div>
+    </div>,
+    `Room ${b.room?.number ?? '—'}`,
+    <div key={`dates-${b.id}`} className="text-sm">
+      {b.check_in} → {b.check_out}
+      <div className="text-xs text-muted-foreground">{differenceInDays(new Date(b.check_out), new Date(b.check_in))} nights</div>
+    </div>,
+    <div key={`amount-${b.id}`}>
+      <div>₹{b.total_amount.toLocaleString()}</div>
+      {b.paid_amount < b.total_amount && <div className="text-xs text-op-orange">₹{(b.total_amount - b.paid_amount).toLocaleString()} due</div>}
+    </div>,
+    <span key={`status-${b.id}`} className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium uppercase
+      ${b.status === 'checked-in' ? 'bg-op-purple/10 text-op-purple' : 
+        b.status === 'confirmed' ? 'bg-blue-500/10 text-blue-500' :
+        b.status === 'cancelled' ? 'bg-red-500/10 text-red-500' :
+        'bg-green-500/10 text-green-500'}`}>
+      {b.status.replace('-', ' ')}
+    </span>
+  ])
 
-      {/* Stats */}
-      <div className={styles.statsGrid}>
+  return (
+    <div className="space-y-6">
+      <PageHeader 
+        eyebrow={`${format(new Date(), 'EEEE, do MMMM yyyy')} · Hotel Overview`} 
+        title={`Good morning, ${profile?.name?.split(' ')[0]} 👋`} 
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {STATS.map((s, i) => (
-          <div key={i} className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--color-bg-elevated)', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>
-                <s.icon size={20} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: s.up ? '#4caf82' : '#d4a017', fontWeight: 600 }}>
-                {s.up ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                {s.trend}
-              </div>
-            </div>
-            <div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--color-cream)', letterSpacing: '-0.02em', marginBottom: '4px' }}>{s.value}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{s.label}</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '3px', opacity: 0.7 }}>{s.sub}</div>
-          </div>
+          <StatCard key={i} label={s.label} value={s.value} delta={s.sub} accent={s.accent} />
         ))}
       </div>
 
-      {/* Charts Row */}
-      <div className={styles.chartsRow}>
-        <div className="card" style={{ flex: 2 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <div>
-              <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Revenue Overview</div>
-              <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>Daily earnings overview</div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2">
+          <Card>
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="font-bold text-lg">Revenue Overview</h3>
+                <p className="text-sm text-muted-foreground">Daily earnings overview</p>
+              </div>
+              <div className="text-2xl font-bold text-op-purple">₹{totalRevenue.toLocaleString()}</div>
             </div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-teal-light)' }}>₹{totalRevenue.toLocaleString()}</div>
-          </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={REVENUE_DATA}>
-              <defs>
-                <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5A9690" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="#5A9690" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(90,150,144,0.08)" />
-              <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="revenue" stroke="#5A9690" strokeWidth={2.5} fill="url(#revenueGrad)" name="revenue" />
-            </AreaChart>
-          </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height={250}>
+              <AreaChart data={REVENUE_DATA}>
+                <defs>
+                  <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--op-purple))" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="hsl(var(--op-purple))" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="day" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
+                <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} dx={-10} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="revenue" stroke="hsl(var(--op-purple))" strokeWidth={3} fill="url(#revenueGrad)" name="revenue" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </Card>
         </div>
 
-        <div className="card" style={{ flex: 1 }}>
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Occupancy Trend</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>Last 7 months</div>
-          </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={OCCUPANCY_DATA}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(90,150,144,0.08)" />
-              <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="rate" fill="#2F5755" radius={[4, 4, 0, 0]} name="rate" />
-            </BarChart>
-          </ResponsiveContainer>
+        <div>
+          <AIInsight 
+            title="Optimize Pricing" 
+            body="Based on local events, we suggest increasing weekend rates for Delux rooms by 15%." 
+          />
         </div>
       </div>
 
-      {/* Room Status + Recent Bookings */}
-      <div className={styles.bottomRow}>
-        {/* Room Status Grid */}
-        <div className="card" style={{ flex: 1 }}>
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Room Status</div>
-            <div style={{ display: 'flex', gap: '16px', marginTop: '12px' }}>
-              {[
-                { label: 'Available', count: availableRooms, color: '#4caf82' },
-                { label: 'Booked', count: bookedRooms, color: 'var(--color-teal-light)' },
-                { label: 'Unavailable', count: maintenanceRooms, color: '#d4a017' },
-              ].map(s => (
-                <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: s.color }} />
-                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{s.label} ({s.count})</span>
-                </div>
-              ))}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+        <Card className="xl:col-span-1">
+          <div className="mb-4">
+            <h3 className="font-bold text-lg">Room Status</h3>
+            <div className="flex flex-wrap gap-4 mt-2">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground"><div className="w-2 h-2 rounded-full bg-green-500" /> Available ({availableRooms})</div>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground"><div className="w-2 h-2 rounded-full bg-op-purple" /> Booked ({bookedRooms})</div>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground"><div className="w-2 h-2 rounded-full bg-op-orange" /> Unavailable ({maintenanceRooms})</div>
             </div>
           </div>
-          <div className={styles.roomGrid}>
+          <div className="grid grid-cols-5 gap-2">
             {rooms.map(r => (
-              <div key={r.id} className={`${styles.roomCell} ${styles[`room_${r.status}`]}`} title={`Room ${r.number} — ${r.status}`}>
-                <span style={{ fontSize: '11px', fontWeight: 700 }}>{r.number}</span>
-                <span style={{ fontSize: '9px', opacity: 0.8 }}>{r.type[0].toUpperCase()}</span>
+              <div 
+                key={r.id} 
+                className={`flex flex-col items-center justify-center p-2 rounded-xl text-xs font-semibold border ${
+                  r.status === 'available' ? 'bg-green-500/10 border-green-500/20 text-green-600' :
+                  r.status === 'booked' ? 'bg-op-purple/10 border-op-purple/20 text-op-purple' :
+                  'bg-op-orange/10 border-op-orange/20 text-op-orange'
+                }`}
+                title={`Room ${r.number} — ${r.status}`}
+              >
+                <span>{r.number}</span>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
-        {/* Recent Bookings */}
-        <div className="card" style={{ flex: 2 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Recent Bookings</div>
-            <a href="/hotel/bookings" style={{ fontSize: '13px', color: 'var(--color-teal-light)', fontWeight: 500 }}>View all →</a>
+        <div className="xl:col-span-2">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-bold text-lg">Recent Bookings</h3>
+            <Link to="/hotel/bookings" className="text-sm text-op-purple hover:underline font-medium">View all →</Link>
           </div>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Guest</th>
-                <th>Room</th>
-                <th>Check-in/out</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bookings.slice(0, 5).map(b => (
-                <tr key={b.id}>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{b.guest?.name ?? '—'}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{b.type}</div>
-                  </td>
-                  <td>Room {b.room?.number ?? '—'}</td>
-                  <td style={{ fontSize: '12px' }}>
-                    {b.check_in} → {b.check_out}
-                    <div style={{ color: 'var(--text-muted)', fontSize: '11px' }}>
-                      {differenceInDays(new Date(b.check_out), new Date(b.check_in))} nights
-                    </div>
-                  </td>
-                  <td>
-                    <div>₹{b.total_amount.toLocaleString()}</div>
-                    {b.paid_amount < b.total_amount && (
-                      <div style={{ fontSize: '11px', color: '#d4a017' }}>₹{(b.total_amount - b.paid_amount).toLocaleString()} due</div>
-                    )}
-                  </td>
-                  <td><span className={`badge badge-${b.status}`}>{b.status}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <SimpleTable 
+            columns={['Guest', 'Room', 'Check-in/out', 'Amount', 'Status']} 
+            rows={recentBookingsRows} 
+          />
         </div>
       </div>
     </div>

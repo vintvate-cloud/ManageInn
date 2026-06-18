@@ -9,9 +9,7 @@ import {
   Building2, BedDouble, UtensilsCrossed, Users, DollarSign, 
   ArrowUpRight, ArrowDownRight, Activity
 } from 'lucide-react'
-import hotelStyles from '../hotel/Hotel.module.css'
 
-const styles = hotelStyles;
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -106,8 +104,8 @@ export default function HybridDashboard() {
   ]
 
   return (
-    <div className={styles.dashPage}>
-      <div className={styles.dashHeader}>
+    <div className="space-y-6">
+      <div className="mb-6 flex justify-between items-start">
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ 
             width: '48px', height: '48px', borderRadius: '16px', 
@@ -117,15 +115,15 @@ export default function HybridDashboard() {
             <Building2 size={24} />
           </div>
           <div>
-            <h1 className={styles.dashTitle}>Hybrid Command Center</h1>
-            <p className={styles.dashSub}>Welcome back, {profile?.name} · Managing Hotel & Restaurant</p>
+            <h1 className="text-3xl font-display font-bold">Hybrid Command Center</h1>
+            <p className="text-muted-foreground mt-1">Welcome back, {profile?.name} · Managing Hotel & Restaurant</p>
           </div>
         </div>
       </div>
 
-      <div className={styles.statsGrid}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {STATS.map((s, i) => (
-          <div key={i} className="stat-card">
+          <div key={i} className="bg-background rounded-3xl border border-border p-5">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div style={{ 
                 width: '44px', height: '44px', borderRadius: '12px', 
@@ -151,8 +149,8 @@ export default function HybridDashboard() {
         ))}
       </div>
 
-      <div className={styles.chartsRow}>
-        <div className="card" style={{ flex: 2 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-background rounded-3xl border border-border p-5" style={{ flex: 2 }}>
           <div style={{ marginBottom: '24px' }}>
             <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Revenue Overview</div>
             <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>Month-to-date performance</div>
@@ -169,7 +167,7 @@ export default function HybridDashboard() {
           </ResponsiveContainer>
         </div>
 
-        <div className="card" style={{ flex: 1 }}>
+        <div className="bg-background rounded-3xl border border-border p-5" style={{ flex: 1 }}>
           <div style={{ marginBottom: '24px' }}>
             <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Revenue Allocation</div>
             <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>Distribution by entity</div>
@@ -204,8 +202,8 @@ export default function HybridDashboard() {
         </div>
       </div>
 
-      <div className={styles.bottomRow}>
-        <div className="card" style={{ flex: 1 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-background rounded-3xl border border-border p-5" style={{ flex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
             <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <BedDouble size={18} color="var(--color-teal-light)" /> Hotel Status
@@ -224,7 +222,7 @@ export default function HybridDashboard() {
           </div>
         </div>
 
-        <div className="card" style={{ flex: 1 }}>
+        <div className="bg-background rounded-3xl border border-border p-5" style={{ flex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
             <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <UtensilsCrossed size={18} color="#d4a017" /> Restaurant Activity
@@ -243,7 +241,7 @@ export default function HybridDashboard() {
           </div>
         </div>
 
-        <div className="card" style={{ flex: 1 }}>
+        <div className="bg-background rounded-3xl border border-border p-5" style={{ flex: 1 }}>
           <div style={{ marginBottom: '20px', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Activity size={18} color="var(--color-cream)" /> System Pulse
           </div>

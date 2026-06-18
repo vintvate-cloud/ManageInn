@@ -3,7 +3,6 @@ import { useRestaurantStore } from '../../store'
 import { Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import type { Order, OrderStatus } from '../../types'
-import styles from './Restaurant.module.css'
 
 const STATUS_FLOW: OrderStatus[] = ['pending', 'preparing', 'ready', 'served', 'billed']
 
@@ -80,37 +79,37 @@ export default function OrderManagement() {
         <button onClick={() => setShowNew(true)} className="btn btn-primary"><Plus size={16} /> New Order</button>
       </div>
 
-      <div className={styles.ordersLayout}>
+      <div className="mb-4">
         {/* Orders List */}
-        <div className={styles.ordersList}>
+        <div className="mb-4">
           {activeOrders.length === 0 && <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>No active orders. Click "New Order" to start.</div>}
           {activeOrders.map(order => {
             const mins = Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000)
             const nextStatus = STATUS_FLOW[STATUS_FLOW.indexOf(order.status) + 1]
             return (
-              <div key={order.id} className={styles.orderCard}>
-                <div className={styles.orderCardTop}>
+              <div key={order.id} className="mb-4">
+                <div className="mb-4">
                   <div>
-                    <div className={styles.orderTableName}>Table {order.table?.number ?? '—'} · {order.table?.location}</div>
-                    <div className={styles.orderTime}>{mins} min ago</div>
+                    <div className="mb-4">Table {order.table?.number ?? '—'} · {order.table?.location}</div>
+                    <div className="mb-4">{mins} min ago</div>
                   </div>
                   <span className={`badge badge-${order.status}`}>{order.status}</span>
                 </div>
 
-                <div className={styles.orderItems}>
+                <div className="mb-4">
                   {order.items?.map((item, i) => (
-                    <span key={i} className={styles.orderItemChip}>
+                    <span key={i} className="mb-4">
                       {item.menu_item?.name ?? '?'} × {item.quantity}
                     </span>
                   ))}
                 </div>
 
-                <div className={styles.orderFooter}>
+                <div className="mb-4">
                   <div>
-                    <div className={styles.orderAmount}>₹{order.total_amount.toLocaleString()}</div>
+                    <div className="mb-4">₹{order.total_amount.toLocaleString()}</div>
                     <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>+ GST ₹{order.gst_amount.toFixed(0)}</div>
                   </div>
-                  <div className={styles.orderStatusBtns}>
+                  <div className="mb-4">
                     {nextStatus && nextStatus !== 'billed' && (
                       <button onClick={() => advanceStatus(order)} className="btn btn-sm btn-primary" style={{ fontSize: '12px' }}>
                         Mark {nextStatus}
@@ -129,10 +128,10 @@ export default function OrderManagement() {
         </div>
 
         {/* New Order Panel */}
-        <div className={styles.newOrderPanel}>
+        <div className="mb-4">
           {showNew ? (
             <>
-              <div className={styles.newOrderTitle}>📋 New Order</div>
+              <div className="mb-4">📋 New Order</div>
 
               <div className="form-group">
                 <label className="form-label">Select Table</label>
@@ -144,9 +143,9 @@ export default function OrderManagement() {
                 </select>
               </div>
 
-              <div className={styles.menuCategories}>
+              <div className="mb-4">
                 {categories.map(cat => (
-                  <button key={cat} onClick={() => setActiveCategory(cat)} className={`${styles.catBtn} ${activeCategory === cat ? styles.catBtnActive : ''}`}>
+                  <button key={cat} onClick={() => setActiveCategory(cat)} className="p-2">
                     {cat}
                   </button>
                 ))}
@@ -154,22 +153,22 @@ export default function OrderManagement() {
 
               <div style={{ flex: 1, overflowY: 'auto' }}>
                 {filteredMenu.filter(m => m.is_available).map(item => (
-                  <div key={item.id} className={styles.menuItemRow}>
+                  <div key={item.id} className="mb-4">
                     <div>
-                      <div className={styles.menuItemName}>{item.name}</div>
-                      <div className={styles.menuItemPrice}>₹{item.price} · {item.is_vegetarian ? '🟢 Veg' : '🔴 Non-veg'}</div>
+                      <div className="mb-4">{item.name}</div>
+                      <div className="mb-4">₹{item.price} · {item.is_vegetarian ? '🟢 Veg' : '🔴 Non-veg'}</div>
                     </div>
-                    <div className={styles.qtyControl}>
-                      <button className={styles.qtyBtn} onClick={() => setQty(item.id, (quantities[item.id] ?? 0) - 1)}>−</button>
-                      <span className={styles.qtyValue}>{quantities[item.id] ?? 0}</span>
-                      <button className={styles.qtyBtn} onClick={() => setQty(item.id, (quantities[item.id] ?? 0) + 1)}>+</button>
+                    <div className="mb-4">
+                      <button className="mb-4" onClick={() => setQty(item.id, (quantities[item.id] ?? 0) - 1)}>−</button>
+                      <span className="mb-4">{quantities[item.id] ?? 0}</span>
+                      <button className="mb-4" onClick={() => setQty(item.id, (quantities[item.id] ?? 0) + 1)}>+</button>
                     </div>
                   </div>
                 ))}
               </div>
 
               {orderTotal > 0 && (
-                <div className={styles.orderSummary}>
+                <div className="mb-4">
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>
                     <span>Subtotal</span><span>₹{orderTotal.toLocaleString()}</span>
                   </div>

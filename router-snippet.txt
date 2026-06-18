@@ -1,0 +1,197 @@
+const HotelBookingPage = lazy(() => import('../features/scaffold/HotelBookingPage'));
+const HotelCheckinPage = lazy(() => import('../features/scaffold/HotelCheckinPage'));
+const HotelCalendarPage = lazy(() => import('../features/scaffold/HotelCalendarPage'));
+const HotelWalkinPage = lazy(() => import('../features/scaffold/HotelWalkinPage'));
+const HotelGroupBookingPage = lazy(() => import('../features/scaffold/HotelGroupBookingPage'));
+const HotelAvailabilityPage = lazy(() => import('../features/scaffold/HotelAvailabilityPage'));
+const HotelHistoryPage = lazy(() => import('../features/scaffold/HotelHistoryPage'));
+const HotelRoomsPage = lazy(() => import('../features/scaffold/HotelRoomsPage'));
+const HotelCategoriesPage = lazy(() => import('../features/scaffold/HotelCategoriesPage'));
+const HotelPricingPage = lazy(() => import('../features/scaffold/HotelPricingPage'));
+const HotelDynamicPricingPage = lazy(() => import('../features/scaffold/HotelDynamicPricingPage'));
+const HotelUpgradesPage = lazy(() => import('../features/scaffold/HotelUpgradesPage'));
+const HotelHousekeepingPage = lazy(() => import('../features/scaffold/HotelHousekeepingPage'));
+const HotelHousekeepingStaffPage = lazy(() => import('../features/scaffold/HotelHousekeepingStaffPage'));
+const HotelInspectionsPage = lazy(() => import('../features/scaffold/HotelInspectionsPage'));
+const HotelLaundryPage = lazy(() => import('../features/scaffold/HotelLaundryPage'));
+const HotelInvoicesPage = lazy(() => import('../features/scaffold/HotelInvoicesPage'));
+const HotelGstPage = lazy(() => import('../features/scaffold/HotelGstPage'));
+const HotelPaymentsPage = lazy(() => import('../features/scaffold/HotelPaymentsPage'));
+const HotelRefundsPage = lazy(() => import('../features/scaffold/HotelRefundsPage'));
+const HotelDuesPage = lazy(() => import('../features/scaffold/HotelDuesPage'));
+const HotelGuestsPage = lazy(() => import('../features/scaffold/HotelGuestsPage'));
+const HotelLoyaltyPage = lazy(() => import('../features/scaffold/HotelLoyaltyPage'));
+const HotelFeedbackPage = lazy(() => import('../features/scaffold/HotelFeedbackPage'));
+const HotelRequestsPage = lazy(() => import('../features/scaffold/HotelRequestsPage'));
+const HotelReportsOccupancyPage = lazy(() => import('../features/scaffold/HotelReportsOccupancyPage'));
+const HotelReportsRevenuePage = lazy(() => import('../features/scaffold/HotelReportsRevenuePage'));
+const HotelReportsArrPage = lazy(() => import('../features/scaffold/HotelReportsArrPage'));
+const HotelReportsRevparPage = lazy(() => import('../features/scaffold/HotelReportsRevparPage'));
+const HotelReportsProfitPage = lazy(() => import('../features/scaffold/HotelReportsProfitPage'));
+const HotelStaffAttendancePage = lazy(() => import('../features/scaffold/HotelStaffAttendancePage'));
+const HotelStaffPayrollPage = lazy(() => import('../features/scaffold/HotelStaffPayrollPage'));
+const HotelStaffShiftsPage = lazy(() => import('../features/scaffold/HotelStaffShiftsPage'));
+const HotelStaffTasksPage = lazy(() => import('../features/scaffold/HotelStaffTasksPage'));
+const RestaurantDineinPage = lazy(() => import('../features/scaffold/RestaurantDineinPage'));
+const RestaurantTakeawayPage = lazy(() => import('../features/scaffold/RestaurantTakeawayPage'));
+const RestaurantOnlinePage = lazy(() => import('../features/scaffold/RestaurantOnlinePage'));
+const RestaurantQrPage = lazy(() => import('../features/scaffold/RestaurantQrPage'));
+const RestaurantTableOrdersPage = lazy(() => import('../features/scaffold/RestaurantTableOrdersPage'));
+const RestaurantTablesPage = lazy(() => import('../features/scaffold/RestaurantTablesPage'));
+const RestaurantReservationsPage = lazy(() => import('../features/scaffold/RestaurantReservationsPage'));
+const RestaurantWaitingPage = lazy(() => import('../features/scaffold/RestaurantWaitingPage'));
+const RestaurantAssignmentPage = lazy(() => import('../features/scaffold/RestaurantAssignmentPage'));
+const RestaurantKitchenPage = lazy(() => import('../features/scaffold/RestaurantKitchenPage'));
+const RestaurantQueuePage = lazy(() => import('../features/scaffold/RestaurantQueuePage'));
+const RestaurantPrepPage = lazy(() => import('../features/scaffold/RestaurantPrepPage'));
+const RestaurantChefPage = lazy(() => import('../features/scaffold/RestaurantChefPage'));
+const RestaurantMenuPage = lazy(() => import('../features/scaffold/RestaurantMenuPage'));
+const RestaurantItemStatusPage = lazy(() => import('../features/scaffold/RestaurantItemStatusPage'));
+const RestaurantCombosPage = lazy(() => import('../features/scaffold/RestaurantCombosPage'));
+const RestaurantPricesPage = lazy(() => import('../features/scaffold/RestaurantPricesPage'));
+const RestaurantRawMaterialsPage = lazy(() => import('../features/scaffold/RestaurantRawMaterialsPage'));
+const RestaurantStockAlertsPage = lazy(() => import('../features/scaffold/RestaurantStockAlertsPage'));
+const RestaurantPoPage = lazy(() => import('../features/scaffold/RestaurantPoPage'));
+const RestaurantVendorsPage = lazy(() => import('../features/scaffold/RestaurantVendorsPage'));
+const RestaurantWastePage = lazy(() => import('../features/scaffold/RestaurantWastePage'));
+const RestaurantPosPage = lazy(() => import('../features/scaffold/RestaurantPosPage'));
+const RestaurantInvoicesPage = lazy(() => import('../features/scaffold/RestaurantInvoicesPage'));
+const RestaurantSplitPage = lazy(() => import('../features/scaffold/RestaurantSplitPage'));
+const RestaurantPaymentModesPage = lazy(() => import('../features/scaffold/RestaurantPaymentModesPage'));
+const RestaurantDiscountsPage = lazy(() => import('../features/scaffold/RestaurantDiscountsPage'));
+const RestaurantCustomersPage = lazy(() => import('../features/scaffold/RestaurantCustomersPage'));
+const RestaurantLoyaltyPage = lazy(() => import('../features/scaffold/RestaurantLoyaltyPage'));
+const RestaurantFeedbackPage = lazy(() => import('../features/scaffold/RestaurantFeedbackPage'));
+const RestaurantRepeatPage = lazy(() => import('../features/scaffold/RestaurantRepeatPage'));
+const RestaurantReportsBestSellingPage = lazy(() => import('../features/scaffold/RestaurantReportsBestSellingPage'));
+const RestaurantReportsDailyPage = lazy(() => import('../features/scaffold/RestaurantReportsDailyPage'));
+const RestaurantReportsMarginPage = lazy(() => import('../features/scaffold/RestaurantReportsMarginPage'));
+const RestaurantReportsPeakPage = lazy(() => import('../features/scaffold/RestaurantReportsPeakPage'));
+const RestaurantReportsFoodCostPage = lazy(() => import('../features/scaffold/RestaurantReportsFoodCostPage'));
+const HybridRevenueTodayPage = lazy(() => import('../features/scaffold/HybridRevenueTodayPage'));
+const HybridRevenueHotelPage = lazy(() => import('../features/scaffold/HybridRevenueHotelPage'));
+const HybridRevenueRestaurantPage = lazy(() => import('../features/scaffold/HybridRevenueRestaurantPage'));
+const HybridRevenueMonthlyPage = lazy(() => import('../features/scaffold/HybridRevenueMonthlyPage'));
+const HybridRevenueProfitPage = lazy(() => import('../features/scaffold/HybridRevenueProfitPage'));
+const HybridHotelOccupiedPage = lazy(() => import('../features/scaffold/HybridHotelOccupiedPage'));
+const HybridHotelAvailablePage = lazy(() => import('../features/scaffold/HybridHotelAvailablePage'));
+const HybridHotelCheckinsPage = lazy(() => import('../features/scaffold/HybridHotelCheckinsPage'));
+const HybridHotelCheckoutsPage = lazy(() => import('../features/scaffold/HybridHotelCheckoutsPage'));
+const HybridHotelPendingPage = lazy(() => import('../features/scaffold/HybridHotelPendingPage'));
+const HybridRestaurantTablesPage = lazy(() => import('../features/scaffold/HybridRestaurantTablesPage'));
+const HybridRestaurantOrdersPage = lazy(() => import('../features/scaffold/HybridRestaurantOrdersPage'));
+const HybridRestaurantKitchenPage = lazy(() => import('../features/scaffold/HybridRestaurantKitchenPage'));
+const HybridRestaurantCustomersPage = lazy(() => import('../features/scaffold/HybridRestaurantCustomersPage'));
+const HybridInventoryAlertsPage = lazy(() => import('../features/scaffold/HybridInventoryAlertsPage'));
+const HybridInventoryValuePage = lazy(() => import('../features/scaffold/HybridInventoryValuePage'));
+const HybridInventoryPurchasesPage = lazy(() => import('../features/scaffold/HybridInventoryPurchasesPage'));
+const HybridStaffOndutyPage = lazy(() => import('../features/scaffold/HybridStaffOndutyPage'));
+const HybridStaffAttendancePage = lazy(() => import('../features/scaffold/HybridStaffAttendancePage'));
+const HybridStaffShiftsPage = lazy(() => import('../features/scaffold/HybridStaffShiftsPage'));
+const HybridCustomersTotalPage = lazy(() => import('../features/scaffold/HybridCustomersTotalPage'));
+const HybridCustomersRepeatPage = lazy(() => import('../features/scaffold/HybridCustomersRepeatPage'));
+const HybridCustomersLoyaltyPage = lazy(() => import('../features/scaffold/HybridCustomersLoyaltyPage'));
+const HybridCustomersCsatPage = lazy(() => import('../features/scaffold/HybridCustomersCsatPage'));
+const HybridFinanceExpensesPage = lazy(() => import('../features/scaffold/HybridFinanceExpensesPage'));
+const HybridFinanceIncomePage = lazy(() => import('../features/scaffold/HybridFinanceIncomePage'));
+const HybridFinanceProfitPage = lazy(() => import('../features/scaffold/HybridFinanceProfitPage'));
+const HybridFinanceGstPage = lazy(() => import('../features/scaffold/HybridFinanceGstPage'));
+
+<Route path="hotel/booking" element={<HotelBookingPage />} />
+<Route path="hotel/checkin" element={<HotelCheckinPage />} />
+<Route path="hotel/calendar" element={<HotelCalendarPage />} />
+<Route path="hotel/walkin" element={<HotelWalkinPage />} />
+<Route path="hotel/group-booking" element={<HotelGroupBookingPage />} />
+<Route path="hotel/availability" element={<HotelAvailabilityPage />} />
+<Route path="hotel/history" element={<HotelHistoryPage />} />
+<Route path="hotel/rooms" element={<HotelRoomsPage />} />
+<Route path="hotel/categories" element={<HotelCategoriesPage />} />
+<Route path="hotel/pricing" element={<HotelPricingPage />} />
+<Route path="hotel/dynamic-pricing" element={<HotelDynamicPricingPage />} />
+<Route path="hotel/upgrades" element={<HotelUpgradesPage />} />
+<Route path="hotel/housekeeping" element={<HotelHousekeepingPage />} />
+<Route path="hotel/housekeeping-staff" element={<HotelHousekeepingStaffPage />} />
+<Route path="hotel/inspections" element={<HotelInspectionsPage />} />
+<Route path="hotel/laundry" element={<HotelLaundryPage />} />
+<Route path="hotel/invoices" element={<HotelInvoicesPage />} />
+<Route path="hotel/gst" element={<HotelGstPage />} />
+<Route path="hotel/payments" element={<HotelPaymentsPage />} />
+<Route path="hotel/refunds" element={<HotelRefundsPage />} />
+<Route path="hotel/dues" element={<HotelDuesPage />} />
+<Route path="hotel/guests" element={<HotelGuestsPage />} />
+<Route path="hotel/loyalty" element={<HotelLoyaltyPage />} />
+<Route path="hotel/feedback" element={<HotelFeedbackPage />} />
+<Route path="hotel/requests" element={<HotelRequestsPage />} />
+<Route path="hotel/reports/occupancy" element={<HotelReportsOccupancyPage />} />
+<Route path="hotel/reports/revenue" element={<HotelReportsRevenuePage />} />
+<Route path="hotel/reports/arr" element={<HotelReportsArrPage />} />
+<Route path="hotel/reports/revpar" element={<HotelReportsRevparPage />} />
+<Route path="hotel/reports/profit" element={<HotelReportsProfitPage />} />
+<Route path="hotel/staff/attendance" element={<HotelStaffAttendancePage />} />
+<Route path="hotel/staff/payroll" element={<HotelStaffPayrollPage />} />
+<Route path="hotel/staff/shifts" element={<HotelStaffShiftsPage />} />
+<Route path="hotel/staff/tasks" element={<HotelStaffTasksPage />} />
+<Route path="restaurant/dinein" element={<RestaurantDineinPage />} />
+<Route path="restaurant/takeaway" element={<RestaurantTakeawayPage />} />
+<Route path="restaurant/online" element={<RestaurantOnlinePage />} />
+<Route path="restaurant/qr" element={<RestaurantQrPage />} />
+<Route path="restaurant/table-orders" element={<RestaurantTableOrdersPage />} />
+<Route path="restaurant/tables" element={<RestaurantTablesPage />} />
+<Route path="restaurant/reservations" element={<RestaurantReservationsPage />} />
+<Route path="restaurant/waiting" element={<RestaurantWaitingPage />} />
+<Route path="restaurant/assignment" element={<RestaurantAssignmentPage />} />
+<Route path="restaurant/kitchen" element={<RestaurantKitchenPage />} />
+<Route path="restaurant/queue" element={<RestaurantQueuePage />} />
+<Route path="restaurant/prep" element={<RestaurantPrepPage />} />
+<Route path="restaurant/chef" element={<RestaurantChefPage />} />
+<Route path="restaurant/menu" element={<RestaurantMenuPage />} />
+<Route path="restaurant/item-status" element={<RestaurantItemStatusPage />} />
+<Route path="restaurant/combos" element={<RestaurantCombosPage />} />
+<Route path="restaurant/prices" element={<RestaurantPricesPage />} />
+<Route path="restaurant/raw-materials" element={<RestaurantRawMaterialsPage />} />
+<Route path="restaurant/stock-alerts" element={<RestaurantStockAlertsPage />} />
+<Route path="restaurant/po" element={<RestaurantPoPage />} />
+<Route path="restaurant/vendors" element={<RestaurantVendorsPage />} />
+<Route path="restaurant/waste" element={<RestaurantWastePage />} />
+<Route path="restaurant/pos" element={<RestaurantPosPage />} />
+<Route path="restaurant/invoices" element={<RestaurantInvoicesPage />} />
+<Route path="restaurant/split" element={<RestaurantSplitPage />} />
+<Route path="restaurant/payment-modes" element={<RestaurantPaymentModesPage />} />
+<Route path="restaurant/discounts" element={<RestaurantDiscountsPage />} />
+<Route path="restaurant/customers" element={<RestaurantCustomersPage />} />
+<Route path="restaurant/loyalty" element={<RestaurantLoyaltyPage />} />
+<Route path="restaurant/feedback" element={<RestaurantFeedbackPage />} />
+<Route path="restaurant/repeat" element={<RestaurantRepeatPage />} />
+<Route path="restaurant/reports/best-selling" element={<RestaurantReportsBestSellingPage />} />
+<Route path="restaurant/reports/daily" element={<RestaurantReportsDailyPage />} />
+<Route path="restaurant/reports/margin" element={<RestaurantReportsMarginPage />} />
+<Route path="restaurant/reports/peak" element={<RestaurantReportsPeakPage />} />
+<Route path="restaurant/reports/food-cost" element={<RestaurantReportsFoodCostPage />} />
+<Route path="hybrid/revenue/today" element={<HybridRevenueTodayPage />} />
+<Route path="hybrid/revenue/hotel" element={<HybridRevenueHotelPage />} />
+<Route path="hybrid/revenue/restaurant" element={<HybridRevenueRestaurantPage />} />
+<Route path="hybrid/revenue/monthly" element={<HybridRevenueMonthlyPage />} />
+<Route path="hybrid/revenue/profit" element={<HybridRevenueProfitPage />} />
+<Route path="hybrid/hotel/occupied" element={<HybridHotelOccupiedPage />} />
+<Route path="hybrid/hotel/available" element={<HybridHotelAvailablePage />} />
+<Route path="hybrid/hotel/checkins" element={<HybridHotelCheckinsPage />} />
+<Route path="hybrid/hotel/checkouts" element={<HybridHotelCheckoutsPage />} />
+<Route path="hybrid/hotel/pending" element={<HybridHotelPendingPage />} />
+<Route path="hybrid/restaurant/tables" element={<HybridRestaurantTablesPage />} />
+<Route path="hybrid/restaurant/orders" element={<HybridRestaurantOrdersPage />} />
+<Route path="hybrid/restaurant/kitchen" element={<HybridRestaurantKitchenPage />} />
+<Route path="hybrid/restaurant/customers" element={<HybridRestaurantCustomersPage />} />
+<Route path="hybrid/inventory/alerts" element={<HybridInventoryAlertsPage />} />
+<Route path="hybrid/inventory/value" element={<HybridInventoryValuePage />} />
+<Route path="hybrid/inventory/purchases" element={<HybridInventoryPurchasesPage />} />
+<Route path="hybrid/staff/onduty" element={<HybridStaffOndutyPage />} />
+<Route path="hybrid/staff/attendance" element={<HybridStaffAttendancePage />} />
+<Route path="hybrid/staff/shifts" element={<HybridStaffShiftsPage />} />
+<Route path="hybrid/customers/total" element={<HybridCustomersTotalPage />} />
+<Route path="hybrid/customers/repeat" element={<HybridCustomersRepeatPage />} />
+<Route path="hybrid/customers/loyalty" element={<HybridCustomersLoyaltyPage />} />
+<Route path="hybrid/customers/csat" element={<HybridCustomersCsatPage />} />
+<Route path="hybrid/finance/expenses" element={<HybridFinanceExpensesPage />} />
+<Route path="hybrid/finance/income" element={<HybridFinanceIncomePage />} />
+<Route path="hybrid/finance/profit" element={<HybridFinanceProfitPage />} />
+<Route path="hybrid/finance/gst" element={<HybridFinanceGstPage />} />

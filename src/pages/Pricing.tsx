@@ -1,156 +1,222 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { LandingNav } from './Landing/LandingNav'
-import { CheckCircle2, Star, ArrowRight } from 'lucide-react'
+import { Sparkles, ArrowRight, Check } from 'lucide-react';
+import { SiteNav, SiteFooter } from '../components/layout/SiteNav';
+import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
-const PLANS = [
-  {
-    plan: 'Free',
-    price: '₹0',
-    sub: 'Forever free',
-    desc: 'Perfect for getting started',
-    featured: false,
-    features: [
-      '1 Property',
-      'Up to 10 Rooms or 5 Tables',
-      'Basic Bookings & Orders',
-      'Manual Billing',
-      '1 Admin User',
-      'Email Support',
-    ],
-    unavailable: ['GST Invoices', 'Analytics Dashboard', 'Realtime Kitchen View', 'Guest History'],
-  },
-  {
-    plan: 'Pro',
-    price: '₹2,499',
-    sub: '/month · billed annually',
-    desc: 'For growing hotel or restaurant businesses',
-    featured: true,
-    badge: 'Most Popular',
-    features: [
-      '3 Properties',
-      'Unlimited Rooms & Tables',
-      'Full Analytics Dashboard',
-      'GST Invoice Generation',
-      'Real-time Kitchen View',
-      'Guest History & Preferences',
-      '5 Admin Users',
-      'Priority Email Support',
-    ],
-    unavailable: ['Hybrid Hotel + Restaurant', 'AI Insights', 'Custom Domain'],
-  },
-  {
-    plan: 'Premium',
-    price: '₹5,999',
-    sub: '/month · billed annually',
-    desc: 'For established hospitality businesses',
-    featured: false,
-    features: [
-      'Unlimited Properties',
-      'Hotel + Restaurant (Hybrid Mode)',
-      'All Pro Features',
-      'AI Insights Dashboard (Coming Soon)',
-      'Custom Branding & White-label',
-      'Unlimited Admin Users',
-      'API & Webhook Access',
-      'Dedicated Account Manager',
-      '99.9% Uptime SLA',
-    ],
-    unavailable: [],
-  },
-]
 
-const FAQ = [
-  { q: 'Can I switch plans later?', a: 'Yes — you can upgrade or downgrade your plan at any time. Upgrades take effect immediately, downgrades at the end of the billing cycle.' },
-  { q: 'Is my data safe?', a: 'Absolutely. We use Supabase with row-level security, meaning your business data is completely isolated from other tenants.' },
-  { q: 'Do you support multiple properties?', a: 'Pro supports 3 properties, and Premium supports unlimited properties under the same account.' },
-  { q: 'What happens after my free trial?', a: 'The Free plan has no trial — it\'s free forever with basic features. Paid plans include a 14-day free trial, no credit card required.' },
-  { q: 'Can I get a demo?', a: 'Yes! Use the demo login on our home page (hotel@demo.com, password: demo123) to explore all features instantly.' },
-]
+
+
+
+type Tier = {
+  name: string;
+  price: { monthly: number; yearly: number };
+  unit: string;
+  blurb: string;
+  cta: string;
+  highlight?: boolean;
+  bg: string;
+  fg: string;
+  features: string[];
+};
+
+const TIERS: Tier[] = [
+  {
+    name: "Starter",
+    price: { monthly: 9, yearly: 7 },
+    unit: "per room / month",
+    blurb: "For boutique properties getting their operations under one roof.",
+    cta: "Start free trial",
+    bg: "bg-white",
+    fg: "text-foreground",
+    features: [
+      "Up to 40 rooms",
+      "PMS + Channel Manager",
+      "Housekeeping board",
+      "Guest messaging (1 channel)",
+      "Unlimited users",
+      "Email support",
+    ],
+  },
+  {
+    name: "Growth",
+    price: { monthly: 19, yearly: 15 },
+    unit: "per room / month",
+    blurb: "For independents scaling revenue with AI pricing and automation.",
+    cta: "Start free trial",
+    highlight: true,
+    bg: "bg-foreground",
+    fg: "text-background",
+    features: [
+      "Unlimited rooms",
+      "Everything in Starter",
+      "AI dynamic pricing",
+      "AI concierge across WhatsApp, SMS, email",
+      "Accounting + Payroll",
+      "Open API + webhooks",
+      "Priority support",
+    ],
+  },
+  {
+    name: "Enterprise",
+    price: { monthly: 39, yearly: 32 },
+    unit: "per room / month",
+    blurb: "For groups, resorts and chains running multiple properties.",
+    cta: "Talk to sales",
+    bg: "bg-op-purple",
+    fg: "text-foreground",
+    features: [
+      "Multi-property HQ",
+      "Custom integrations",
+      "Dedicated success manager",
+      "SSO, SAML, audit logs",
+      "SOC 2 + ISO 27001 reports",
+      "99.99% SLA",
+      "24/7 phone support",
+    ],
+  },
+];
 
 export default function PricingPage() {
+  const [yearly, setYearly] = useState(true);
+
   return (
-    <div style={{ background: 'var(--color-bg)', minHeight: '100vh' }}>
-      <LandingNav />
+    <main className="bg-background text-foreground">
+      <SiteNav />
 
-      <div style={{ paddingTop: '120px', paddingBottom: '100px' }}>
-        <div className="container">
-          {/* Header */}
-          <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 72px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(90,150,144,0.08)', border: '1px solid rgba(90,150,144,0.18)', borderRadius: '100px', padding: '5px 14px', fontSize: '11px', fontWeight: 700, color: 'var(--color-teal-light)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '20px' }}>
-              Simple, Transparent Pricing
-            </div>
-            <h1 className="text-display" style={{ marginBottom: '16px' }}>
-              Start free, scale <span className="gradient-text">without limits</span>
-            </h1>
-            <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-              No hidden fees. No per-transaction charges. Just straightforward plans that grow with your hospitality business.
-            </p>
-          </div>
+      {/* Hero */}
+      <section className="pt-36 pb-10 px-4 text-center">
+        <p className="text-muted-foreground mb-4">Pricing</p>
+        <h1 className="font-display text-[14vw] sm:text-[10vw] lg:text-[120px] leading-[0.9]">
+          Simple, per-room<br />
+          <span className="text-op-purple">honest pricing</span>
+        </h1>
+        <p className="mt-8 max-w-xl mx-auto text-lg text-muted-foreground">
+          All plans include the AI copilot, unlimited users, and a 14-day free trial. No credit card required.
+        </p>
 
-          {/* Plans */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', maxWidth: '1100px', margin: '0 auto 80px', alignItems: 'stretch' }}>
-            {PLANS.map((p, i) => (
-              <div key={i} style={{
-                background: p.featured ? 'linear-gradient(135deg, rgba(47,87,85,0.2) 0%, rgba(22,10,9,0.9) 100%)' : 'var(--color-bg-card)',
-                border: `1px solid ${p.featured ? 'rgba(90,150,144,0.35)' : 'var(--border-subtle)'}`,
-                borderRadius: '24px',
-                padding: '36px',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: p.featured ? '0 0 40px rgba(90,150,144,0.1)' : 'none',
-                transform: p.featured ? 'scale(1.02)' : 'none',
-              }}>
-                {p.badge && (
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(90,150,144,0.15)', color: 'var(--color-teal-light)', border: '1px solid rgba(90,150,144,0.25)', borderRadius: '100px', padding: '4px 12px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '20px', width: 'fit-content' }}>
-                    <Star size={10} fill="currentColor" /> {p.badge}
-                  </div>
-                )}
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>{p.plan}</div>
-                <div style={{ fontSize: '48px', fontWeight: 900, color: 'var(--color-cream)', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: '4px' }}>{p.price}</div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>{p.sub}</div>
-                <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '24px' }}>{p.desc}</div>
+        <div className="inline-flex mt-10 bg-muted rounded-full p-1.5">
+          <button
+            onClick={() => setYearly(false)}
+            className={`px-5 py-2 text-sm rounded-full font-semibold transition ${!yearly ? "bg-foreground text-background" : "text-foreground/70"}`}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setYearly(true)}
+            className={`px-5 py-2 text-sm rounded-full font-semibold transition ${yearly ? "bg-foreground text-background" : "text-foreground/70"}`}
+          >
+            Yearly · save 20%
+          </button>
+        </div>
+      </section>
 
-                <div style={{ height: '1px', background: 'var(--border-subtle)', marginBottom: '24px' }} />
-
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
-                  {p.features.map((f, j) => (
-                    <div key={j} style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                      <CheckCircle2 size={14} style={{ color: 'var(--color-teal-light)', flexShrink: 0 }} /> {f}
-                    </div>
-                  ))}
-                  {p.unavailable?.map((f, j) => (
-                    <div key={j} style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '14px', color: 'var(--text-muted)', opacity: 0.5 }}>
-                      <div style={{ width: '14px', height: '14px', borderRadius: '50%', border: '1.5px solid var(--text-muted)', flexShrink: 0 }} /> {f}
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  to="/signup"
-                  className={`btn ${p.featured ? 'btn-primary' : 'btn-secondary'}`}
-                  style={{ justifyContent: 'center', width: '100%' }}
-                >
-                  {p.plan === 'Free' ? 'Get Started Free' : `Start ${p.plan} Trial`} <ArrowRight size={15} />
-                </Link>
+      {/* Tier cards */}
+      <section className="px-3 sm:px-6 pb-12">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-4">
+          {TIERS.map((t) => (
+            <div
+              key={t.name}
+              className={`relative rounded-[32px] p-8 sm:p-10 ${t.bg} ${t.fg} hover-lift ${t.highlight ? "lg:-mt-4" : ""}`}
+            >
+              {t.highlight && (
+                <span className="absolute top-6 right-6 inline-flex items-center gap-1.5 bg-op-pink text-foreground rounded-full px-3 py-1 text-xs font-semibold">
+                  <Sparkles className="h-3 w-3" /> Most popular
+                </span>
+              )}
+              <div className="text-sm font-semibold opacity-70">{t.name}</div>
+              <div className="mt-6 flex items-baseline gap-2">
+                <span className="font-display text-7xl">${yearly ? t.price.yearly : t.price.monthly}</span>
               </div>
-            ))}
-          </div>
-
-          {/* FAQ */}
-          <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: 800, textAlign: 'center', marginBottom: '40px', color: 'var(--text-primary)' }}>Frequently Asked Questions</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {FAQ.map((f, i) => (
-                <div key={i} style={{ background: 'var(--color-bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '14px', padding: '20px 24px' }}>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>{f.q}</div>
-                  <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{f.a}</div>
-                </div>
-              ))}
+              <div className="text-sm opacity-70 mt-2">{t.unit}</div>
+              <p className="mt-6 opacity-80">{t.blurb}</p>
+              <Link
+                to={t.name === "Enterprise" ? "/signup" : "/signup"}
+                className={`mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold w-full justify-center transition hover:scale-[1.02] ${
+                  t.highlight
+                    ? "bg-op-pink text-foreground"
+                    : t.name === "Enterprise"
+                    ? "bg-foreground text-background"
+                    : "bg-foreground text-background"
+                }`}
+              >
+                {t.cta} <ArrowRight className="h-4 w-4" />
+              </Link>
+              <ul className="mt-10 space-y-3">
+                {t.features.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-sm">
+                    <Check className="h-5 w-5 shrink-0 mt-0.5" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Comparison */}
+      <section className="px-3 sm:px-6 py-16">
+        <div className="max-w-6xl mx-auto bg-muted rounded-[32px] p-8 sm:p-12">
+          <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight">Compare features</h2>
+          <div className="mt-10 overflow-x-auto">
+            <table className="w-full text-left text-sm sm:text-base">
+              <thead>
+                <tr className="text-muted-foreground">
+                  <th className="py-4 pr-4 font-medium">Feature</th>
+                  <th className="py-4 px-4 font-semibold text-foreground">Starter</th>
+                  <th className="py-4 px-4 font-semibold text-foreground">Growth</th>
+                  <th className="py-4 px-4 font-semibold text-foreground">Enterprise</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["PMS + Front Desk", true, true, true],
+                  ["Channel manager", true, true, true],
+                  ["Housekeeping", true, true, true],
+                  ["AI dynamic pricing", false, true, true],
+                  ["AI concierge", "Email only", "All channels", "All channels + voice"],
+                  ["Accounting + Payroll", false, true, true],
+                  ["Multi-property HQ", false, false, true],
+                  ["SSO / SAML", false, false, true],
+                  ["Dedicated success manager", false, false, true],
+                  ["Support", "Email", "Priority", "24/7 phone + SLA"],
+                ].map((row, i) => (
+                  <tr key={i}>
+                    <td className="py-4 pr-4">{row[0] as string}</td>
+                    {row.slice(1).map((v, j) => (
+                      <td key={j} className="py-4 px-4">
+                        {typeof v === "boolean" ? (
+                          v ? <Check className="h-5 w-5" /> : <span className="text-muted-foreground">—</span>
+                        ) : (
+                          <span>{v as string}</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-    </div>
-  )
+      </section>
+
+      {/* CTA */}
+      <section className="px-3 sm:px-6 py-6">
+        <div className="rounded-[36px] bg-op-orange p-8 sm:p-20 text-center min-h-[50vh] flex flex-col justify-center">
+          <h2 className="font-display text-4xl sm:text-7xl text-foreground">
+            Try ManageInn free for 14 days
+          </h2>
+          <p className="mt-6 text-foreground/80">No credit card. Cancel anytime.</p>
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
+            <Link to="/signup" className="bg-foreground text-background rounded-full px-8 py-4 font-semibold inline-flex items-center gap-2">
+              Start free trial <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link to="/signup" className="bg-white text-foreground rounded-full px-8 py-4 font-semibold">Book a demo</Link>
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
+    </main>
+  );
 }

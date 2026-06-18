@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useRestaurantStore } from '../../store'
 import { Plus, Edit2, Trash2 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
-import styles from './Restaurant.module.css'
 
 export default function MenuManager() {
   const { menu, addMenuItem, updateMenuItem } = useRestaurantStore()
@@ -43,18 +42,18 @@ export default function MenuManager() {
         ))}
       </div>
 
-      <div className={styles.menuGrid}>
+      <div className="mb-4">
         {filtered.map(item => (
-          <div key={item.id} className={styles.menuCard} style={{ opacity: item.is_available ? 1 : 0.6 }}>
-            <div className={styles.menuCardCat}>{item.category}</div>
+          <div key={item.id} className="mb-4" style={{ opacity: item.is_available ? 1 : 0.6 }}>
+            <div className="mb-4">{item.category}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
-              <div className={styles.menuCardName}>{item.name}</div>
+              <div className="mb-4">{item.name}</div>
               <span style={{ fontSize: '11px' }}>{item.is_vegetarian ? '🟢' : '🔴'}</span>
             </div>
-            {item.description && <div className={styles.menuCardDesc}>{item.description}</div>}
+            {item.description && <div className="mb-4">{item.description}</div>}
 
-            <div className={styles.menuCardFooter}>
-              <div className={styles.menuCardPrice}>₹{item.price}</div>
+            <div className="mb-4">
+              <div className="mb-4">₹{item.price}</div>
               <div style={{ display: 'flex', gap: '6px' }}>
                 <button
                   onClick={() => toggleAvail(item.id, item.is_available)}

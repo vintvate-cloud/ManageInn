@@ -1,8 +1,15 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { supabase } from '../../lib/supabase'
-import type { User, Session } from '../../lib/supabase'
 import type { UserProfile, UserRole, BusinessType } from '../../types'
-import { toast } from 'react-hot-toast'
+
+export interface User {
+  id: string
+  email?: string
+}
+
+export interface Session {
+  user: User
+  access_token: string
+}
 
 interface AuthState {
   user: User | null
@@ -24,7 +31,7 @@ type AuthContextType = AuthState & AuthActions
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-// Mock profiles for demo (when Supabase is not configured)
+// Mock profiles for demo
 const MOCK_USERS: Record<string, UserProfile> = {
   'hotel@demo.com': {
     id: 'demo-hotel-001',
@@ -55,9 +62,6 @@ const MOCK_USERS: Record<string, UserProfile> = {
   },
 }
 
-const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || 
-  import.meta.env.VITE_SUPABASE_URL === 'https://placeholder.supabase.co'
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
@@ -65,183 +69,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (isDemoMode) {
-      // Check localStorage for demo session
-      const savedProfile = localStorage.getItem('hh_demo_profile')
-      if (savedProfile) {
-        const parsed = JSON.parse(savedProfile)
-        setProfile(parsed)
-        setUser({ id: parsed.id, email: parsed.email } as User)
-      }
-      setLoading(false)
-      return
+    // Check localStorage for demo session
+    const savedProfile = localStorage.getItem('hh_demo_profile')
+    if (savedProfile) {
+      const parsed = JSON.parse(savedProfile)
+      setProfile(parsed)
+      setUser({ id: parsed.id, email: parsed.email } as User)
+      setSession({ user: { id: parsed.id, email: parsed.email }, access_token: 'mock-token' })
     }
-
-    // Real Supabase auth
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session) fetchProfile(session)
-      else setLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session) fetchProfile(session)
-      else {
-        setProfile(null)
-        setLoading(false)
-      }
-    })
-
-    return () => subscription.unsubscribe()
+    setLoading(false)
   }, [])
-
-  const [attemptedCreation, setAttemptedCreation] = useState<string | null>(null)
-
-  async function fetchProfile(activeSession: Session) {
-    const authUser = activeSession.user
-    if (!authUser || loading === false && profile) return
-
-    try {
-      // Delay to ensure auth propagation
-      await new Promise(resolve => setTimeout(resolve, 800))
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, email, name, role, plan, created_at, business_id')
-        .eq('id', authUser.id)
-        .maybeSingle()
-
-      if (!error && data) {
-        setProfile(data as UserProfile)
-        setLoading(false)
-        return
-      }
-
-      // If we've already tried to create it for this user, don't try again to avoid loops
-      if (attemptedCreation === authUser.id) {
-        setLoading(false)
-        return
-      }
-
-      // If missing or inaccessible (406 often happens on permissions), attempt creation
-      if (!data || error?.status === 406 || error?.status === 401) {
-        setAttemptedCreation(authUser.id)
-        
-        let businessId = null
-
-        // If the user provided a business name during signup, create the business first
-        if (authUser.user_metadata?.business_name) {
-          const bizType = authUser.user_metadata?.role === 'restaurant_admin' ? 'restaurant' : 
-                          authUser.user_metadata?.role === 'hybrid_admin' ? 'both' : 'hotel'
-
-          const { data: bizData, error: bizErr } = await supabase
-            .from('businesses')
-            .insert({
-              name: authUser.user_metadata.business_name,
-              phone: authUser.user_metadata.phone,
-              type: bizType,
-              owner_id: authUser.id
-            })
-            .select()
-            .maybeSingle()
-            
-          if (!bizErr && bizData) {
-            businessId = bizData.id
-          }
-        }
-
-        const newProfile = {
-          id: authUser.id,
-          email: authUser.email,
-          name: authUser.user_metadata?.name || 'New User',
-          role: authUser.user_metadata?.role || 'hotel_admin',
-          plan: 'free',
-          business_id: businessId,
-          created_at: new Date().toISOString(),
-        }
-
-        const { data: inserted, error: insertErr } = await supabase
-          .from('profiles')
-          .insert(newProfile)
-          .select()
-          .maybeSingle()
-
-        if (!insertErr && inserted) {
-          setProfile(inserted as UserProfile)
-        } else {
-          // If insert fails (Conflict, FK violation, etc.), use the fallback profile
-          // This keeps the UI working even if the DB is misconfigured
-          setProfile(newProfile as UserProfile)
-          
-          if (insertErr?.code === '23503') {
-            console.error('SQL SCHEMA ERROR: profiles table references users instead of auth.users.')
-          }
-        }
-      }
-    } catch (err) {
-      console.error('Profile process failed:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   // ── Sign In ──────────────────────────────────────────────
   async function signIn(email: string, password: string) {
-    if (isDemoMode) {
-      const mockProfile = MOCK_USERS[email]
-      if (mockProfile && password === 'demo123') {
-        setProfile(mockProfile)
-        setUser({ id: mockProfile.id, email: mockProfile.email } as User)
-        localStorage.setItem('hh_demo_profile', JSON.stringify(mockProfile))
-        return { error: null }
-      }
-      return { error: 'Invalid credentials. Use demo accounts below.' }
+    const mockProfile = MOCK_USERS[email]
+    if (mockProfile && password === 'demo123') {
+      setProfile(mockProfile)
+      setUser({ id: mockProfile.id, email: mockProfile.email } as User)
+      setSession({ user: { id: mockProfile.id, email: mockProfile.email }, access_token: 'mock-token' })
+      localStorage.setItem('hh_demo_profile', JSON.stringify(mockProfile))
+      return { error: null }
     }
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error: error?.message ?? null }
+    return { error: 'Invalid credentials. Use demo accounts below.' }
   }
 
   // ── Sign Up ──────────────────────────────────────────────
   async function signUp(email: string, password: string, name: string, role: UserRole, businessName?: string, phone?: string) {
-    if (isDemoMode) {
-      return { error: 'Sign up is disabled in demo mode. Use the demo accounts.', session: null }
+    const mockProfile: UserProfile = {
+      id: 'demo-new-' + Date.now(),
+      email,
+      name,
+      role,
+      business_id: 'biz-new-' + Date.now(),
+      plan: 'pro',
+      created_at: new Date().toISOString(),
     }
-
-    const { data, error } = await supabase.auth.signUp({ 
-      email, 
-      password,
-      options: {
-        data: {
-          name,
-          role,
-          business_name: businessName,
-          phone,
-        }
-      }
-    })
-    
-    if (error || !data.user) return { error: error?.message ?? 'Signup failed', session: null }
-
-    // No manual profiles insert here anymore. 
-    // It's handled by fetchProfile when the session becomes active.
-    // This avoids 401 errors for users who haven't confirmed their email yet.
-
-    return { error: null, session: data.session }
+    setProfile(mockProfile)
+    setUser({ id: mockProfile.id, email } as User)
+    const newSession = { user: { id: mockProfile.id, email } as User, access_token: 'mock-token' }
+    setSession(newSession)
+    localStorage.setItem('hh_demo_profile', JSON.stringify(mockProfile))
+    return { error: null, session: newSession }
   }
 
   // ── Sign Out ─────────────────────────────────────────────
   async function signOut() {
-    if (isDemoMode) {
-      setProfile(null)
-      setUser(null)
-      localStorage.removeItem('hh_demo_profile')
-      return
-    }
-    await supabase.auth.signOut()
+    setProfile(null)
+    setUser(null)
+    setSession(null)
+    localStorage.removeItem('hh_demo_profile')
   }
 
   // ── Update Profile ───────────────────────────────────────
@@ -249,27 +125,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!profile) return
     const newProfile = { ...profile, ...updates }
     setProfile(newProfile)
-    if (isDemoMode) {
-      localStorage.setItem('hh_demo_profile', JSON.stringify(newProfile))
-      return
-    }
-    await supabase.from('profiles').update(updates).eq('id', profile.id)
+    localStorage.setItem('hh_demo_profile', JSON.stringify(newProfile))
   }
 
   // ── Create Business ──────────────────────────────────────
   async function createBusiness(name: string, type: BusinessType) {
-    if (isDemoMode) {
-      return { error: null }
-    }
-    if (!user) return { error: 'Not authenticated' }
-    const { data, error } = await supabase
-      .from('businesses')
-      .insert({ name, type, owner_id: user.id })
-      .select()
-      .single()
-
-    if (error) return { error: error.message }
-    await updateProfile({ business_id: data.id })
     return { error: null }
   }
 

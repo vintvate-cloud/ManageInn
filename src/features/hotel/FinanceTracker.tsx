@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useHotelStore } from '../../store'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { TrendingUp, TrendingDown, DollarSign, CreditCard, Wallet } from 'lucide-react'
-import styles from './Hotel.module.css'
 
 const MONTHLY = [
   { month: 'Oct', income: 180000, expense: 42000 },
@@ -36,14 +35,14 @@ export default function FinanceTracker() {
       </div>
 
       {/* Stats */}
-      <div className={styles.financeStats}>
+      <div className="mb-4">
         {[
           { label: 'Total Income', value: `₹${income.toLocaleString()}`, icon: TrendingUp, color: '#4caf82', bg: 'rgba(76,175,130,0.1)' },
           { label: 'Total Expenses', value: `₹${expense.toLocaleString()}`, icon: TrendingDown, color: '#e74c3c', bg: 'rgba(192,57,43,0.1)' },
           { label: 'Net Revenue', value: `₹${net.toLocaleString()}`, icon: DollarSign, color: 'var(--color-teal-light)', bg: 'rgba(90,150,144,0.1)' },
           { label: 'Pending', value: `₹3,400`, icon: Wallet, color: '#d4a017', bg: 'rgba(212,160,23,0.1)' },
         ].map((s, i) => (
-          <div key={i} className="stat-card">
+          <div key={i} className="bg-background rounded-3xl border border-border p-5">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>
                 <s.icon size={18} />
@@ -56,7 +55,7 @@ export default function FinanceTracker() {
       </div>
 
       {/* Revenue Chart */}
-      <div className="card">
+      <div className="bg-background rounded-3xl border border-border p-5">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div>
             <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Income vs Expenses</div>
@@ -96,7 +95,7 @@ export default function FinanceTracker() {
           { label: 'UPI', icon: '📱', txs: upiTx, color: 'var(--color-teal-light)' },
           { label: 'Card', icon: '💳', txs: cardTx, color: '#d4a017' },
         ].map(m => (
-          <div key={m.label} className="card" style={{ flex: 1, padding: '20px' }}>
+          <div key={m.label} className="bg-background rounded-3xl border border-border p-5" style={{ flex: 1, padding: '20px' }}>
             <div style={{ fontSize: '24px', marginBottom: '8px' }}>{m.icon}</div>
             <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{m.label}</div>
             <div style={{ fontSize: '20px', fontWeight: 800, color: m.color }}>₹{m.txs.reduce((s, t) => s + t.amount, 0).toLocaleString()}</div>
@@ -116,14 +115,14 @@ export default function FinanceTracker() {
             <option value="card">Card</option>
           </select>
         </div>
-        <div className={styles.txList}>
+        <div className="mb-4">
           {filtered.map(t => (
-            <div key={t.id} className={styles.txItem}>
+            <div key={t.id} className="mb-4">
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{t.description}</div>
                 <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{t.created_at} · {t.payment_method}</div>
               </div>
-              <div style={{ fontSize: '18px', fontWeight: 800 }} className={t.type === 'income' ? styles.txIncome : styles.txExpense}>
+              <div style={{ fontSize: '18px', fontWeight: 800 }} className={t.type === 'income' ? "p-2" : "p-2"}>
                 {t.type === 'income' ? '+' : '-'}₹{t.amount.toLocaleString()}
               </div>
             </div>

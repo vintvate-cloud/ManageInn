@@ -3,7 +3,6 @@ import { useHotelStore } from '../../store'
 import { Plus, Edit2, Trash2, Search } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import type { Room, RoomStatus } from '../../types'
-import styles from './Hotel.module.css'
 
 const STATUS_FILTERS: { label: string; value: RoomStatus | 'all' }[] = [
   { label: 'All Rooms', value: 'all' },
@@ -55,9 +54,9 @@ export default function RoomManagement() {
   }
 
   return (
-    <div className={styles.roomManagePage}>
+    <div className="mb-4">
       {/* Header */}
-      <div className={styles.pageActions}>
+      <div className="mb-4">
         <div>
           <h1 className="page-title">Rooms</h1>
           <p className="page-subtitle">{rooms.length} total rooms · {rooms.filter(r => r.status === 'available').length} available</p>
@@ -67,9 +66,9 @@ export default function RoomManagement() {
 
       {/* Filters */}
       <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-        <div className={styles.filterRow}>
+        <div className="mb-4">
           {STATUS_FILTERS.map(f => (
-            <button key={f.value} onClick={() => setFilter(f.value)} className={`${styles.filterBtn} ${filter === f.value ? styles.filterBtnActive : ''}`}>
+            <button key={f.value} onClick={() => setFilter(f.value)} className="p-2">
               {f.label}
             </button>
           ))}
@@ -81,36 +80,36 @@ export default function RoomManagement() {
       </div>
 
       {/* Room Cards */}
-      <div className={styles.roomCardsGrid}>
+      <div className="mb-4">
         {filtered.map(r => (
-          <div key={r.id} className={styles.roomCard}>
-            <div className={styles.roomCardTop}>
+          <div key={r.id} className="mb-4">
+            <div className="mb-4">
               <div>
-                <div className={styles.roomCardNumber}>Room {r.number}</div>
-                <div className={styles.roomCardFloor}>Floor {r.floor}</div>
+                <div className="mb-4">Room {r.number}</div>
+                <div className="mb-4">Floor {r.floor}</div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
                 <span className={`badge badge-${r.status}`}>{r.status}</span>
-                <span className={styles.roomCardType}>{r.type}</span>
+                <span className="mb-4">{r.type}</span>
               </div>
             </div>
 
-            <div className={styles.roomCardPrice}>
-              ₹{r.price_per_night.toLocaleString()} <span className={styles.roomCardPriceSub}>/night</span>
+            <div className="mb-4">
+              ₹{r.price_per_night.toLocaleString()} <span className="mb-4">/night</span>
             </div>
 
-            <div className={styles.roomCardAmenities}>
+            <div className="mb-4">
               {r.amenities.slice(0, 4).map(a => (
-                <span key={a} className={styles.amenityTag}>{a}</span>
+                <span key={a} className="mb-4">{a}</span>
               ))}
-              {r.amenities.length > 4 && <span className={styles.amenityTag}>+{r.amenities.length - 4}</span>}
+              {r.amenities.length > 4 && <span className="mb-4">+{r.amenities.length - 4}</span>}
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', fontSize: '12px', marginBottom: '14px' }}>
               👤 {r.capacity} {r.capacity === 1 ? 'person' : 'persons'}
             </div>
 
-            <div className={styles.roomCardActions}>
+            <div className="mb-4">
               <button onClick={() => cycleStatus(r)} className="btn btn-ghost btn-sm" style={{ flex: 1, justifyContent: 'center', fontSize: '12px' }}>Change Status</button>
               <button onClick={() => openEdit(r)} className="btn btn-secondary btn-sm"><Edit2 size={13} /></button>
               <button onClick={() => handleDelete(r.id)} className="btn btn-danger btn-sm"><Trash2 size={13} /></button>

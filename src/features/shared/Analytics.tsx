@@ -36,7 +36,7 @@ export default function Analytics() {
           { label: 'Hotel Revenue', value: `₹${hotelRevenue.toLocaleString()}`, icon: Hotel, color: '#4caf82' },
           { label: 'Restaurant Revenue', value: `₹${restaurantRevenue.toLocaleString()}`, icon: UtensilsCrossed, color: '#d4a017' },
         ].map((s, i) => (
-          <div key={i} className="stat-card">
+          <div key={i} className="bg-background rounded-3xl border border-border p-5">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--color-bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>
                 <s.icon size={18} />
@@ -49,7 +49,7 @@ export default function Analytics() {
       </div>
 
       {/* Combined Chart */}
-      <div className="card">
+      <div className="bg-background rounded-3xl border border-border p-5">
         <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Hotel vs Restaurant Revenue</div>
@@ -84,7 +84,7 @@ export default function Analytics() {
 
       {/* Quick metrics */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-        <div className="card">
+        <div className="bg-background rounded-3xl border border-border p-5">
           <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '16px', color: 'var(--text-primary)' }}>🏨 Hotel Quick Stats</div>
           {[
             { label: 'Total Rooms', value: rooms.length },
@@ -98,7 +98,7 @@ export default function Analytics() {
             </div>
           ))}
         </div>
-        <div className="card">
+        <div className="bg-background rounded-3xl border border-border p-5">
           <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '16px', color: 'var(--text-primary)' }}>🍽️ Restaurant Quick Stats</div>
           {[
             { label: 'Total Tables', value: tables.length },

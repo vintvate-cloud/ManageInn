@@ -4,21 +4,14 @@ import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { useAuth } from '../../features/auth/AuthContext'
 import { useHotelStore, useRestaurantStore } from '../../store'
-import styles from './DashboardLayout.module.css'
+import { X } from 'lucide-react'
 
 export function DashboardLayout() {
   const { profile } = useAuth()
   const { fetchHotelData } = useHotelStore()
   const { fetchRestaurantData } = useRestaurantStore()
   
-  const [collapsed, setCollapsed] = useState(() => {
-    return localStorage.getItem('hh_sidebar_collapsed') === 'true'
-  })
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
-
-  useEffect(() => {
-    localStorage.setItem('hh_sidebar_collapsed', String(collapsed))
-  }, [collapsed])
 
   // Initial Data Sync
   useEffect(() => {
@@ -33,29 +26,35 @@ export function DashboardLayout() {
   }, [profile?.business_id, profile?.role, fetchHotelData, fetchRestaurantData])
 
   return (
-    <div className={styles.layout}>
-      {/* Mobile overlay */}
+    <div className="min-h-screen bg-muted/40 text-foreground flex">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-foreground text-background h-screen sticky top-0">
+        <Sidebar />
+      </aside>
+
+      {/* Mobile Sidebar */}
       {mobileSidebarOpen && (
-        <div
-          className={styles.mobileOverlay}
-          onClick={() => setMobileSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 z-[70] lg:hidden">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setMobileSidebarOpen(false)} />
+          <div className="absolute top-0 left-0 h-full w-[84%] max-w-xs bg-foreground text-background flex flex-col shadow-2xl animate-in slide-in-from-left duration-300">
+            <button 
+              onClick={() => setMobileSidebarOpen(false)} 
+              aria-label="Close menu" 
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 z-50 transition"
+            >
+              <X className="h-5 w-5 text-background" />
+            </button>
+            <Sidebar />
+          </div>
+        </div>
       )}
 
-      <div className={`${styles.sidebarWrapper} ${mobileSidebarOpen ? styles.sidebarWrapperOpen : ''}`}>
-        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      </div>
-
-      <div
-        className={styles.main}
-        style={{ marginLeft: collapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-width)' }}
-      >
-        <Topbar
-          sidebarCollapsed={collapsed}
-          onMobileMenuToggle={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-        />
-
-        <main className={styles.content}>
+      {/* Main Content Area */}
+      <div className="flex-1 min-w-0">
+        <Topbar onMobileMenuToggle={() => setMobileSidebarOpen(true)} />
+        
+        {/* Main Content Area */}
+        <main className="p-4 sm:p-8 space-y-6">
           <Outlet />
         </main>
       </div>

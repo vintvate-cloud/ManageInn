@@ -4,7 +4,6 @@ import { Plus, Search, CalendarCheck } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import type { Booking, BookingStatus } from '../../types'
 import { differenceInDays } from 'date-fns'
-import styles from './Hotel.module.css'
 
 const FILTERS: { label: string; value: BookingStatus | 'all' }[] = [
   { label: 'All', value: 'all' },
@@ -71,7 +70,7 @@ export default function BookingSystem() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div className={styles.pageActions}>
+      <div className="mb-4">
         <div>
           <h1 className="page-title">Bookings</h1>
           <p className="page-subtitle">{bookings.length} total · {bookings.filter(b => b.status === 'checked-in').length} currently checked in</p>
@@ -80,9 +79,9 @@ export default function BookingSystem() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-        <div className={styles.filterRow}>
+        <div className="mb-4">
           {FILTERS.map(f => (
-            <button key={f.value} onClick={() => setFilter(f.value)} className={`${styles.filterBtn} ${filter === f.value ? styles.filterBtnActive : ''}`}>
+            <button key={f.value} onClick={() => setFilter(f.value)} className="p-2">
               {f.label}
             </button>
           ))}
@@ -93,8 +92,8 @@ export default function BookingSystem() {
         </div>
       </div>
 
-      <div className="card" style={{ padding: 0 }}>
-        <table className="data-table">
+      <div className="bg-background rounded-3xl border border-border p-5" style={{ padding: 0 }}>
+        <table className="w-full text-sm text-left">
           <thead>
             <tr>
               <th>Guest</th>
@@ -152,7 +151,7 @@ export default function BookingSystem() {
               <button onClick={() => setShowModal(false)} className="btn btn-ghost btn-sm">✕</button>
             </div>
 
-            <div className={styles.bookingForm}>
+            <div className="mb-4">
               <div className="form-group">
                 <label className="form-label">Guest Name *</label>
                 <input className="form-input" value={form.guest_name} onChange={e => setForm(p => ({ ...p, guest_name: e.target.value }))} placeholder="Full name" />

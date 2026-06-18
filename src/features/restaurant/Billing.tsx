@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useRestaurantStore } from '../../store'
 import { Receipt, Printer } from 'lucide-react'
 import { toast } from 'react-hot-toast'
-import styles from './Restaurant.module.css'
 
 const GST_RATE = 12
 
@@ -36,7 +35,7 @@ export default function Billing() {
         <p className="page-subtitle">Generate GST-ready invoices and process payments</p>
       </div>
 
-      <div className={styles.billLayout}>
+      <div className="mb-4">
         {/* Order picker */}
         <div>
           <div style={{ marginBottom: '16px', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>Served Orders — Ready to Bill</div>
@@ -83,24 +82,24 @@ export default function Billing() {
 
         {/* Invoice */}
         <div>
-          <div className={styles.billInvoice}>
-            <div className={styles.billHeader}>
+          <div className="mb-4">
+            <div className="mb-4">
               <div style={{ fontSize: '28px', marginBottom: '8px' }}>🍽️</div>
-              <div className={styles.billBusinessName}>Spice Garden Restaurant</div>
-              <div className={styles.billSubtitle}>GST No: 27AAAPZ1234A1Z5</div>
-              <div className={styles.billSubtitle} style={{ marginTop: '4px' }}>
+              <div className="mb-4">Spice Garden Restaurant</div>
+              <div className="mb-4">GST No: 27AAAPZ1234A1Z5</div>
+              <div className="mb-4" style={{ marginTop: '4px' }}>
                 INVOICE #{selected ? `SG-${selected.id.toUpperCase()}` : 'SG-XXXXXX'}
               </div>
-              <div className={styles.billSubtitle}>{new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+              <div className="mb-4">{new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
             </div>
 
             {selected ? (
               <>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 600 }}>Table {selected.table?.number} · {selected.table?.location}</div>
 
-                <div className={styles.billItems}>
+                <div className="mb-4">
                   {selected.items?.map((item, i) => (
-                    <div key={i} className={styles.billItemRow}>
+                    <div key={i} className="mb-4">
                       <div>
                         <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{item.menu_item?.name ?? '?'}</div>
                         <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>×{item.quantity} @ ₹{item.unit_price}</div>
@@ -110,20 +109,20 @@ export default function Billing() {
                   ))}
                 </div>
 
-                <div className={styles.billTotals}>
-                  <div className={styles.billTotalRow}>
+                <div className="mb-4">
+                  <div className="mb-4">
                     <span>Subtotal</span>
                     <span>₹{subtotal.toLocaleString()}</span>
                   </div>
-                  <div className={styles.billTotalRow}>
+                  <div className="mb-4">
                     <span>CGST (6%)</span>
                     <span>₹{(gst / 2).toFixed(2)}</span>
                   </div>
-                  <div className={styles.billTotalRow}>
+                  <div className="mb-4">
                     <span>SGST (6%)</span>
                     <span>₹{(gst / 2).toFixed(2)}</span>
                   </div>
-                  <div className={styles.billGrandTotal}>
+                  <div className="mb-4">
                     <span>Total</span>
                     <span>₹{(subtotal + gst).toLocaleString()}</span>
                   </div>
