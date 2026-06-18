@@ -1,36 +1,59 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 import s from './Landing.module.css'
 
-/* ── SCROLL REVEAL UTILITY ────────────────────────────────── */
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('[data-r]')
-    const io = new IntersectionObserver(
-      entries => entries.forEach(e => { 
-        if (e.isIntersecting) { 
-          e.target.classList.add(s.in || 'in') // Need to ensure global or local '.in' is targeted, we defined [data-r].in in css. 
-          io.unobserve(e.target) 
-        } 
-      }),
-      { threshold: 0.15 }
+gsap.registerPlugin(ScrollTrigger)
+
+/* ── SCROLL REVEAL & PARALLAX UTILITIES ─────────────────────── */
+function useGSAPAnimations() {
+  useGSAP(() => {
+    // 1. Fade Reveal
+    gsap.utils.toArray('[data-r]').forEach((el: any) => {
+      gsap.fromTo(el, 
+        { autoAlpha: 0, y: 50 }, 
+        { autoAlpha: 1, y: 0, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } }
+      )
+    })
+
+    // 2. Image Parallax (moving image within its container)
+    gsap.utils.toArray('[data-parallax]').forEach((img: any) => {
+      gsap.to(img, {
+        yPercent: 20, ease: 'none',
+        scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true }
+      })
+    })
+
+    // 3. Full Width Showcase Scrub Scale
+    gsap.utils.toArray('[data-scrub-scale]').forEach((img: any) => {
+      gsap.to(img, {
+        scale: 1.2, ease: 'none',
+        scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true }
+      })
+    })
+
+    // 4. Staggered Bento Cards
+    gsap.fromTo('[data-bento-card]', 
+      { autoAlpha: 0, y: 60 },
+      { autoAlpha: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '[data-bento-grid]', start: 'top 80%' } }
     )
-    els.forEach(el => io.observe(el))
-    return () => io.disconnect()
+
+    // 5. Footer Title Reveal
+    gsap.utils.toArray('[data-footer-title]').forEach((el: any) => {
+      gsap.fromTo(el, 
+        { autoAlpha: 0, y: 40, scale: 0.9 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 1.5, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 95%' } }
+      )
+    })
   }, [])
 }
 
-/* ── PLACEHOLDER IMAGE COMPONENT ──────────────────────────── */
-function ImgPlaceholder({ className, text = "Image Placement" }: { className: string, text?: string }) {
-  return (
-    <div className={`${s.imgPlaceholder} ${className}`}>
-      <span className={s.imgPlaceholderText}>{text}</span>
-    </div>
-  )
-}
+/* ── (Images are sourced from premium collections) ───────── */
 
 export default function Landing() {
-  useScrollReveal()
+  useGSAPAnimations()
   const [navVisible, setNavVisible] = useState(false)
 
   useEffect(() => {
@@ -59,81 +82,63 @@ export default function Landing() {
       {/* ── HERO SECTION ───────────────────────────────────── */}
       <section className={s.hero}>
         <div className={s.heroContent}>
-          <div className={s.eyebrow}>The New Standard in Management</div>
+          <div className={s.eyebrow}>Enterprise Resource Planning</div>
           <h1 className={s.heroTitle}>
-            Uncompromising
-            <span>Excellence</span>
+            ManageInn
           </h1>
           <p className={s.heroSub}>
-            An exclusive, all-in-one cinematic command center for ultra-premium hotels and fine-dining establishments. Oversee every detail, effortlessly.
+            A modern, cinematic command center designed for visionary businesses. Harmonize your resources, accelerate workflows, and oversee every organizational detail effortlessly.
           </p>
         </div>
-
-        <div className={s.heroImgWrap}>
-           <ImgPlaceholder className={s.heroMainImg} text="Cinematic Hero Image Placeholder (16:9)" />
-        </div>
       </section>
 
-      {/* ── STATS GRID ─────────────────────────────────────── */}
-      <section className={s.statGrid}>
-        {[
-          { val: '₹14L+', lbl: 'Daily Revenue Processed' },
-          { val: '99%', lbl: 'Occupancy Optimation' },
-          { val: 'ZERO', lbl: 'Downtime Guarantee' },
-          { val: '24/7', lbl: 'White-Glove Support' },
-        ].map((st, i) => (
-          <div key={i} className={s.statItem} data-r>
-            <div className={s.statVal}>{st.val}</div>
-            <div className={s.statLbl}>{st.lbl}</div>
+      <div className={s.bgMidBrown}>
+        {/* ── EDITORIAL MODULE 1: HR ──────────────────────── */}
+        <section className={s.editorialSec}>
+          <div className={s.asymGrid}>
+            <div className={s.asymText} data-r>
+              <div className={s.edLabel}>01 — Human Resources</div>
+              <h2 className={s.edH2}>Empowered<br/><i>Workforce</i></h2>
+              <p className={s.edP}>
+                Elevate your talent management to an art form. Visual organizational charts, deep performance analytics, and seamless payroll—beautifully orchestrated on a single pane of glass.
+              </p>
+              <Link to="/signup" className={s.btnGold}>Explore HR Suite</Link>
+            </div>
+            <div className={s.asymImgWrap} data-r>
+              <img data-parallax src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=800&auto=format&fit=crop" className={s.edImgTall} alt="Luxury Hotel Interior" />
+            </div>
           </div>
-        ))}
-      </section>
+        </section>
 
-      {/* ── EDITORIAL MODULE 1: HOTEL ──────────────────────── */}
-      <section className={s.editorialSec}>
-        <div className={s.grid2}>
-          <div data-r>
-            <div className={s.edLabel}>01 — The Residency</div>
-            <h2 className={s.edH2}>Flawless<br/><i>Operations</i></h2>
-            <p className={s.edP}>
-              Elevate your front desk to an art form. Visual room grids, VIP guest histories, and instant check-ins beautifully orchestrated on a single pane of glass.
-            </p>
-            <Link to="/signup" className={s.btnGold}>Explore Hotel Suite</Link>
-          </div>
-          <div data-r>
-            <ImgPlaceholder className={s.edImgTall} text="Portrait Image: Luxury Hotel Interior" />
-          </div>
-        </div>
-      </section>
+        {/* ── FULL WIDTH SHOWCASE ────────────────────────────── */}
+        <section className={s.fwImgWrap}>
+           <img data-scrub-scale src="https://images.unsplash.com/photo-1498503182468-3b51cbb6cb24?q=80&w=2000&auto=format&fit=crop" className={s.fwImg} alt="Property View" />
+        </section>
 
-      {/* ── FULL WIDTH SHOWCASE ────────────────────────────── */}
-      <section className={s.fwImgWrap} data-r>
-         <ImgPlaceholder className={s.fwImg} text="Ultra-Wide Landscape Image: Property View" />
-      </section>
-
-      {/* ── EDITORIAL MODULE 2: RESTAURANT ─────────────────── */}
-      <section className={s.editorialSec}>
-        <div className={`${s.grid2} ${s.grid2Rev}`}>
-          <div data-r>
-            <div className={s.edLabel}>02 — The Dining Room</div>
-            <h2 className={s.edH2}>Culinary<br/><i>Precision</i></h2>
-            <p className={s.edP}>
-              From the maître d's floor plan to the chef's real-time KDS. Harmonize front-of-house grace with back-of-house velocity.
-            </p>
-            <Link to="/signup" className={s.btnGold}>Discover Restaurant</Link>
+        {/* ── EDITORIAL MODULE 2: FINANCE ─────────────────── */}
+        <section className={s.editorialSec}>
+          <div className={`${s.asymGrid} ${s.asymGridRev}`}>
+            <div className={s.asymText} data-r>
+              <div className={s.edLabel}>02 — Financial Control</div>
+              <h2 className={s.edH2}>Economic<br/><i>Precision</i></h2>
+              <p className={s.edP}>
+                From macro-level corporate forecasting to real-time micro-transactions. Harmonize departmental budgets with absolute financial velocity and clarity.
+              </p>
+              <Link to="/signup" className={s.btnGold}>Discover Finance</Link>
+            </div>
+            <div className={s.asymImgWrap} data-r>
+              <img data-parallax src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=800&auto=format&fit=crop" className={s.edImgTall} alt="Fine Dining Setup" />
+            </div>
           </div>
-          <div data-r>
-            <ImgPlaceholder className={s.edImgTall} text="Portrait Image: Fine Dining Setup" />
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ── MARQUEE ────────────────────────────────────────── */}
       <div className={s.marquee}>
         <div className={s.marqueeTrack}>
           {[...Array(6)].map((_, i) => (
             <div key={i} className={s.marqueeItem}>
-              ManageInn <span>✦</span> Premium <span>✦</span> Secure <span>✦</span>
+              ManageInn ERP <span>✦</span> Scalable <span>✦</span> Intelligent <span>✦</span> Secure <span>✦</span>
             </div>
           ))}
         </div>
@@ -146,41 +151,41 @@ export default function Landing() {
           <h2 className={s.edH2}>Intelligence <i>&amp;</i> Design</h2>
         </div>
 
-        <div className={s.bentoGrid}>
+        <div className={s.bentoGrid} data-bento-grid>
           {/* Card 1 */}
-          <div className={`${s.bCard} ${s.c8}`} data-r>
+          <div className={`${s.bCard} ${s.c8}`} data-bento-card>
             <div>
-              <div className={s.bT}>Hybrid Command</div>
-              <div className={s.bD}>Manage hospitality and gastronomy concurrently without ever switching contexts.</div>
+              <div className={s.bT}>Unified Ecosystem</div>
+              <div className={s.bD}>Manage finance, operations, and human capital concurrently without ever switching contexts.</div>
             </div>
-            <ImgPlaceholder className={s.bImgLg} text="Dashboard Snapshot" />
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" className={s.bImgLg} alt="Dashboard Snapshot" />
           </div>
 
           {/* Card 2 */}
-          <div className={`${s.bCard} ${s.c4}`} data-r>
+          <div className={`${s.bCard} ${s.c4}`} data-bento-card>
             <div>
               <div className={s.bT}>Live Analytics</div>
               <div className={s.bD}>Revenue, metrics, and KPI tracking in real-time, presented with extreme clarity.</div>
             </div>
-            <ImgPlaceholder className={s.bImg} text="Chart Preview" />
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop" className={s.bImg} alt="Chart Preview" />
           </div>
 
           {/* Card 3 */}
-          <div className={`${s.bCard} ${s.c6}`} data-r>
+          <div className={`${s.bCard} ${s.c6}`} data-bento-card>
             <div>
-              <div className={s.bT}>GST &amp; Accounting</div>
-              <div className={s.bD}>Auto-calculated splits, audit-proof logs, and immaculate folio generation.</div>
+              <div className={s.bT}>Automated Compliance</div>
+              <div className={s.bD}>Auto-calculated taxes, audit-proof ledgers, and immaculate reporting generation.</div>
             </div>
-            <ImgPlaceholder className={s.bImg} text="Invoice Graphic" />
+            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop" className={s.bImg} alt="Invoice Graphic" />
           </div>
 
           {/* Card 4 */}
-          <div className={`${s.bCard} ${s.c6}`} data-r>
+          <div className={`${s.bCard} ${s.c6}`} data-bento-card>
             <div>
               <div className={s.bT}>Supabase Secured</div>
               <div className={s.bD}>Bank-grade encryption, instant synchronization, and role-based access controls.</div>
             </div>
-            <ImgPlaceholder className={s.bImg} text="Architecture Abstract" />
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop" className={s.bImg} alt="Architecture Abstract" />
           </div>
         </div>
       </section>
@@ -188,7 +193,7 @@ export default function Landing() {
       {/* ── FOOTER ─────────────────────────────────────────── */}
       <footer className={s.footer}>
         <div data-r>
-          <h2 className={s.footerTitle}>ManageInn</h2>
+          <h2 className={s.footerTitle} data-footer-title>ManageInn</h2>
           <div className={s.footerNav}>
             <Link to="/login" className={s.navLink}>Member Portal</Link>
             <Link to="/pricing" className={s.navLink}>Membership Tiers</Link>

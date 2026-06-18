@@ -4,46 +4,53 @@
    DESIGN TOKENS
 ================================ */
 :root {
-  /* Colors */
-  --color-bg: #0d0302;
-  --color-bg-2: #150604;
-  --color-bg-card: #1c0a09;
-  --color-bg-elevated: #221210;
-  --color-maroon: #432323;
-  --color-maroon-light: #5c2e2e;
-  --color-maroon-dark: #2d1616;
-  --color-teal-dark: #2F5755;
-  --color-teal: #3a6e6b;
-  --color-teal-light: #5A9690;
-  --color-teal-lighter: #72b3ad;
-  --color-cream: #E0D9D9;
-  --color-cream-dim: #b8b0b0;
-  --color-cream-muted: #8a8282;
-  --color-accent-dark: #280905;
+/* Colors */
+  --color-bg: #f4f3ee;
+  --color-bg-2: #ebeae4;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #ffffff;
+  
+  --color-primary: #463f3a;
+  --color-secondary: #8a817c;
+  --color-tertiary: #bcb8b1;
+  --color-accent: #e0afa0;
+
+  /* Semantic Mappings for legacy classes */
+  --color-maroon: #e0afa0;
+  --color-maroon-light: #e8c2b7;
+  --color-maroon-dark: #c79585;
+  --color-teal-dark: #463f3a;
+  --color-teal: #8a817c;
+  --color-teal-light: #8a817c;
+  --color-teal-lighter: #bcb8b1;
+  --color-cream: #f4f3ee;
+  --color-cream-dim: #bcb8b1;
+  --color-cream-muted: #8a817c;
+  --color-accent-dark: #463f3a;
 
   /* Semantic */
   --color-success: #4caf82;
   --color-warning: #d4a017;
   --color-danger: #c0392b;
-  --color-info: #5A9690;
+  --color-info: #8a817c;
 
   /* Text */
-  --text-primary: #E0D9D9;
-  --text-secondary: #b8b0b0;
-  --text-muted: #6e6666;
-  --text-inverse: #0d0302;
+  --text-primary: #463f3a;
+  --text-secondary: #8a817c;
+  --text-muted: #bcb8b1;
+  --text-inverse: #f4f3ee;
 
   /* Borders */
-  --border-subtle: rgba(90, 150, 144, 0.12);
-  --border-default: rgba(90, 150, 144, 0.2);
-  --border-strong: rgba(90, 150, 144, 0.35);
+  --border-subtle: rgba(188, 184, 177, 0.3);
+  --border-default: rgba(188, 184, 177, 0.6);
+  --border-strong: #8a817c;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
-  --shadow-teal: 0 0 30px rgba(90, 150, 144, 0.15);
-  --shadow-maroon: 0 0 30px rgba(67, 35, 35, 0.3);
+  --shadow-sm: 0 1px 3px rgba(70, 63, 58, 0.05);
+  --shadow-md: 0 4px 16px rgba(70, 63, 58, 0.08);
+  --shadow-lg: 0 8px 40px rgba(70, 63, 58, 0.12);
+  --shadow-teal: 0 0 30px rgba(138, 129, 124, 0.15);
+  --shadow-maroon: 0 0 30px rgba(224, 175, 160, 0.3);
 
   /* Spacing */
   --space-1: 4px;
@@ -481,16 +488,16 @@ textarea {
    GLASS MORPHISM
 ================================ */
 .glass {
-  background: rgba(22, 10, 9, 0.7);
+  background: rgba(244, 243, 238, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
 }
 
 .glass-teal {
-  background: rgba(47, 87, 85, 0.12);
+  background: rgba(224, 175, 160, 0.12);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(90, 150, 144, 0.2);
+  border: 1px solid rgba(224, 175, 160, 0.3);
 }
 
 /* ================================
@@ -543,10 +550,10 @@ textarea {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-teal-dark) 0%, var(--color-teal-light) 100%);
-  color: white;
+  background: var(--color-primary);
+  color: var(--text-inverse);
   border-color: transparent;
-  box-shadow: 0 4px 20px rgba(90, 150, 144, 0.3);
+  box-shadow: 0 4px 20px rgba(70, 63, 58, 0.15);
 }
 
 .btn-primary:hover {
@@ -556,7 +563,7 @@ textarea {
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-cream);
+  color: var(--color-primary);
   border-color: var(--border-default);
 }
 
@@ -567,9 +574,9 @@ textarea {
 }
 
 .btn-maroon {
-  background: linear-gradient(135deg, var(--color-maroon) 0%, var(--color-maroon-light) 100%);
-  color: var(--color-cream);
-  box-shadow: 0 4px 20px rgba(67, 35, 35, 0.4);
+  background: var(--color-accent);
+  color: var(--color-primary);
+  box-shadow: 0 4px 20px rgba(224, 175, 160, 0.3);
 }
 
 .btn-maroon:hover {
